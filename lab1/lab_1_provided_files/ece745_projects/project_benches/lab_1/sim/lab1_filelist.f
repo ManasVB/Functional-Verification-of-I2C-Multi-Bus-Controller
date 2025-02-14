@@ -11,4 +11,5 @@
 ../rtl/wishbone.vhd
 ../rtl/iicmb_m_wb.vhd
 ../../../verification_ip/interface_packages/wb_pkg/src/wb_if.sv
+../../../verification_ip/interface_packages/i2c_pkg/src/i2c_if.sv
 ../testbench/top.sv
