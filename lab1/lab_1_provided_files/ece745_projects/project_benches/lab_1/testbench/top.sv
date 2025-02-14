@@ -50,8 +50,11 @@ initial
 	bit [WB_DATA_WIDTH-1:0] monitor_data;
 	bit monitor_we;
 	
-	wb_bus.master_monitor(monitor_addr, monitor_data, monitor_we);
-	//$display(" Address: 0x%0h, Data: %x, Direction: %d", monitor_addr, monitor_data, monitor_we);
+        forever begin
+        @(posedge clk)
+		wb_bus.master_monitor(monitor_addr, monitor_data, monitor_we);
+		$display(" Address: 0x%0h, Data: %x, Direction: %d", monitor_addr, monitor_data, monitor_we);
+	end 
 	
   end
 
@@ -73,48 +76,32 @@ initial
 	
 	wait(irq == 1);
 	wb_bus.master_read(CMDR_Reg, recv_data);
-
-//	do begin
-//		wb_bus.master_read(CMDR_Reg, recv_data);
-//	end while(recv_data & 8'b1000_0000);	// wait until DON bit of CMDR reads '1'.
 	
 	wb_bus.master_write(CMDR_Reg, 8'bxxxx_x100);	// Start Command
-
-//	do begin
-//		wb_bus.master_read(CMDR_Reg, recv_data);
-//	end while(recv_data & 8'b1000_0000);	// wait until DON bit of CMDR reads '1'.
 	
 	wait(irq == 1);
 	wb_bus.master_read(CMDR_Reg, recv_data);
 
 	wb_bus.master_write(DPR_Reg, 8'h44);
 	
-	wb_bus.master_write(CMDR_Reg, 8'bxxxx_x001);	// Write Command	
+	wb_bus.master_write(CMDR_Reg, 8'bxxxx_x001);	// Write Command
+
+	wait(irq == 1);
+	wb_bus.master_read(CMDR_Reg, recv_data);
 	
 	wb_bus.master_write(DPR_Reg, 8'h78);	// Byte is written
 
 	wb_bus.master_write(CMDR_Reg, 8'bxxxx_x001);	// Write Command
 
-//	do begin
-//		wb_bus.master_read(CMDR_Reg, recv_data);
-//	end while(recv_data & 8'b1000_0000);	// wait until DON bit of CMDR reads '1'.
-
 	wait(irq == 1);
+	wb_bus.master_read(CMDR_Reg, recv_data);
 
 	wb_bus.master_write(CMDR_Reg, 8'bxxxx_x101);	// Stop Command
 
-//	do begin
-//		wb_bus.master_read(CMDR_Reg, recv_data);
-//	end while(recv_data & 8'b1000_0000);	// wait until DON bit of CMDR reads '1'.
-
 	wait(irq == 1);
+	wb_bus.master_read(CMDR_Reg, recv_data);
 	
-end
-
-// ****************************************************************************
-// Timeout after 1600ns
-initial begin : timeout
-	#1600 $finish;
+ 	$finish;
 end
 
 // ****************************************************************************
