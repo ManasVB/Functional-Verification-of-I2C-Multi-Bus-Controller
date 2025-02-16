@@ -6,6 +6,9 @@ parameter int WB_ADDR_WIDTH = 2;
 parameter int WB_DATA_WIDTH = 8;
 parameter int NUM_I2C_BUSSES = 1;
 
+parameter int I2C_ADDR_WIDTH = 7;
+parameter int I2C_DATA_WIDTH = 8;
+
 bit  clk;
 bit  rst = 1'b1;
 wire cyc;
@@ -103,6 +106,20 @@ initial
 	
  	$finish;
 end
+
+// ****************************************************************************
+// Instantiate the I2C Interface
+i2c_if       #(
+      .I2C_DATA_WIDTH(I2C_DATA_WIDTH),
+      .I2C_ADDR_WIDTH(I2C_ADDR_WIDTH)
+      )
+i2c_bus (
+  // System sigals
+  .scl(scl),
+  .sda(sda),
+  );
+
+// ****************************************************************************
 
 // ****************************************************************************
 // Instantiate the Wishbone master Bus Functional Model
