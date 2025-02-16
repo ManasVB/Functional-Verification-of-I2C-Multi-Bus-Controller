@@ -107,6 +107,22 @@ initial
  	$finish;
 end
 
+initial 
+	begin : monitor_i2c_bus
+	
+	bit [I2C_ADDR_WIDTH-1:0] monitor_addr;
+	bit [I2C_DATA_WIDTH-1:0] monitor_data [$];
+	bit monitor_op;
+	
+        forever begin
+		i2c_bus.monitor(monitor_addr, monitor_op, monitor_data);
+		
+		if(monitor_op == 1)
+			$display(" I2C_BUS READ Transfer: Address: 0x%0h, Data: %p", monitor_addr, monitor_data);
+		else
+			$display(" I2C_BUS WRITE Transfer: Address: 0x%0h, Data: %p", monitor_addr, monitor_data);
+	end 
+end
 // ****************************************************************************
 // Instantiate the I2C Interface
 i2c_if       #(
@@ -116,7 +132,7 @@ i2c_if       #(
 i2c_bus (
   // System sigals
   .scl(scl),
-  .sda(sda),
+  .sda(sda)
   );
 
 // ****************************************************************************
