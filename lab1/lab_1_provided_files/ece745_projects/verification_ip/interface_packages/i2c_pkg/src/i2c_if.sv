@@ -139,15 +139,16 @@ task monitor (output bit [I2C_ADDR_WIDTH-1:0] addr, output i2c_op_t op, output b
 	addr = saddr;
 	op = observed_op;
 
-	if(op == WRITE) begin
+	if(op == WRITE)
 		data = wdata_buffer;
-	end
+	else
+		data = rdata_buffer;
 
 	
-	// Delete the buffer once done
+	// Delete the buffers once done
 	wdata_buffer.delete();
-
-		
+	rdata_buffer.delete();
+	
 endtask
 
 endinterface

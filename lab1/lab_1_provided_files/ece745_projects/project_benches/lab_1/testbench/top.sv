@@ -90,7 +90,7 @@ initial
 
 	
 	if(0) begin
-		// Lab-1 Test Flow Starts - Currently disabled
+		/******* Lab-1 Test Flow Starts ******* - Currently disabled */
 
 		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x100);	// Start Command
 		wait(irq == 1);
@@ -119,11 +119,14 @@ initial
 		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x101);	// Stop Command
 		wait(irq == 1);
 		wb_bus.master_read(CMDR_Reg, recv_data);
-		// Lab-1 Test Flow Ends
+
+		/******* Lab-1 Test Flow Ends *******/
 
 	end
 
-	// Project-1 Test Flow Starts
+	/******* Project-1 Test Flow Starts *******/
+
+	// Write 32 incrementing values, from 0 to 31, to the i2c_bus
 	
 	wb_bus.master_write(CMDR_Reg, 8'bxxxx_x100);	// Start Command
 	wait(irq == 1);
@@ -144,6 +147,11 @@ initial
 	wb_bus.master_write(CMDR_Reg, 8'bxxxx_x101);	// Stop Command
 	wait(irq == 1);
 	wb_bus.master_read(CMDR_Reg, recv_data);
+
+
+	// Read 32 values from the i2c_bus -> Return incrementing data from 100 to 131
+
+	
 
  	$finish;
 end
