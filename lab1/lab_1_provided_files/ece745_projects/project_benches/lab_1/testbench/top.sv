@@ -29,6 +29,9 @@ parameter DPR_Reg = 8'h01;
 parameter CMDR_Reg = 8'h02;
 parameter FSMR_Reg = 8'h03;
 
+bit op;
+bit [I2C_DATA_WIDTH-1:0] write_data [];
+
 // ****************************************************************************
 // Clock generator
 initial  
@@ -46,20 +49,26 @@ initial
   	rst = 1'b0;
   end
 // ****************************************************************************
-// Monitor Wishbone bus and display transfers in the transcript
-initial
-  begin : wb_monitoring
-	bit [WB_ADDR_WIDTH-1:0] monitor_addr;
-	bit [WB_DATA_WIDTH-1:0] monitor_data;
-	bit monitor_we;
-	
-        forever begin
-        @(posedge clk)
-		wb_bus.master_monitor(monitor_addr, monitor_data, monitor_we);
-		$display(" Address: 0x%0h, Data: %x, Direction: %d", monitor_addr, monitor_data, monitor_we);
-	end 
-	
-  end
+
+if(0) begin
+	// Monitor Wishbone bus and display transfers in the transcript - Currently disabled
+	initial
+	  begin : wb_monitoring
+		bit [WB_ADDR_WIDTH-1:0] monitor_addr;
+		bit [WB_DATA_WIDTH-1:0] monitor_data;
+		bit monitor_we;
+		
+		forever begin
+		@(posedge clk)
+			wb_bus.master_monitor(monitor_addr, monitor_data, monitor_we);
+			if(!monitor_we)
+				$display("WB_BUS Address: 0x%0h, Data: %x, Direction: READ", monitor_addr, monitor_data);
+			else
+				$display("WB_BUS Address: 0x%0h, Data: %x, Direction: WRITE", monitor_addr, monitor_data);
+		end 
+		
+	  end
+end // if(0)
 
 // ****************************************************************************
 // Define the flow of the simulation
@@ -76,35 +85,74 @@ initial
 	wb_bus.master_write(DPR_Reg, 8'h05);	// ID of Desired I2C Bus
 	
 	wb_bus.master_write(CMDR_Reg, 8'bxxxx_x110);	// Set Bus Command
-	
 	wait(irq == 1);
 	wb_bus.master_read(CMDR_Reg, recv_data);
+
+	
+	if(0) begin
+		// Lab-1 Test Flow Starts - Currently disabled
+
+		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x100);	// Start Command
+		wait(irq == 1);
+		wb_bus.master_read(CMDR_Reg, recv_data);
+
+		wb_bus.master_write(DPR_Reg, 8'h44);
+		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x001);	// Write Command
+		wait(irq == 1);
+		wb_bus.master_read(CMDR_Reg, recv_data);
+		
+		wb_bus.master_write(DPR_Reg, 8'h78);	// Byte is written
+		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x001);	// Write Command
+		wait(irq == 1);
+		wb_bus.master_read(CMDR_Reg, recv_data);
+
+		wb_bus.master_write(DPR_Reg, 8'h08);	// Byte is written
+		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x001);	// Write Command
+		wait(irq == 1);
+		wb_bus.master_read(CMDR_Reg, recv_data);
+
+		wb_bus.master_write(DPR_Reg, 8'h18);	// Byte is written
+		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x001);	// Write Command
+		wait(irq == 1);
+		wb_bus.master_read(CMDR_Reg, recv_data);
+
+		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x101);	// Stop Command
+		wait(irq == 1);
+		wb_bus.master_read(CMDR_Reg, recv_data);
+		// Lab-1 Test Flow Ends
+
+	end
+
+	// Project-1 Test Flow Starts
 	
 	wb_bus.master_write(CMDR_Reg, 8'bxxxx_x100);	// Start Command
-	
 	wait(irq == 1);
 	wb_bus.master_read(CMDR_Reg, recv_data);
 
-	wb_bus.master_write(DPR_Reg, 8'h44);
-	
+	wb_bus.master_write(DPR_Reg, 8'h44); // Set Slave address 22
 	wb_bus.master_write(CMDR_Reg, 8'bxxxx_x001);	// Write Command
-
 	wait(irq == 1);
 	wb_bus.master_read(CMDR_Reg, recv_data);
-	
-	wb_bus.master_write(DPR_Reg, 8'h78);	// Byte is written
 
-	wb_bus.master_write(CMDR_Reg, 8'bxxxx_x001);	// Write Command
-
-	wait(irq == 1);
-	wb_bus.master_read(CMDR_Reg, recv_data);
+	for(int i = 0; i <= 31 ; i++) begin		
+		wb_bus.master_write(DPR_Reg, i);	// Byte is written
+		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x001);	// Write Command
+		wait(irq == 1);
+		wb_bus.master_read(CMDR_Reg, recv_data);		
+	end
 
 	wb_bus.master_write(CMDR_Reg, 8'bxxxx_x101);	// Stop Command
-
 	wait(irq == 1);
 	wb_bus.master_read(CMDR_Reg, recv_data);
-	
+
  	$finish;
+end
+
+initial begin
+	forever begin
+		i2c_bus.wait_for_i2c_transfer(op, write_data);
+	end
+
 end
 
 initial 
@@ -113,14 +161,18 @@ initial
 	bit [I2C_ADDR_WIDTH-1:0] monitor_addr;
 	bit [I2C_DATA_WIDTH-1:0] monitor_data [$];
 	bit monitor_op;
+	int i;
 	
-        forever begin
+	forever begin #5
+
 		i2c_bus.monitor(monitor_addr, monitor_op, monitor_data);
 		
 		if(monitor_op == 1)
-			$display(" I2C_BUS READ Transfer: Address: 0x%0h, Data: %p", monitor_addr, monitor_data);
+			foreach(monitor_data[i])
+				$display("I2C_BUS READ Transfer: Address: 0x%0h, Data: %d", monitor_addr, monitor_data[i]);
 		else
-			$display(" I2C_BUS WRITE Transfer: Address: 0x%0h, Data: %p", monitor_addr, monitor_data);
+			foreach(monitor_data[i])
+				$display("I2C_BUS WRITE Transfer: Address: 0x%0h, Data: %d", monitor_addr, monitor_data[i]);
 	end 
 end
 // ****************************************************************************

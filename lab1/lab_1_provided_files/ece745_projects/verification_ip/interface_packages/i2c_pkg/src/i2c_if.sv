@@ -13,6 +13,8 @@ bit ack = 1'b0, nack = 1'b0;
 
 bit [I2C_DATA_WIDTH-1 :0] rdata_buffer [$]; // Unbounded buffer to hold all the read_data
 bit [I2C_DATA_WIDTH-1 :0] wdata_buffer [$]; // Unbounded buffer to hold all the write_data
+
+bit [I2C_ADDR_WIDTH-1 :0] saddr; // To store slave address
 i2c_op_t observed_op;
 
 // When SCL is high and SDA goes from high-low: start
@@ -43,54 +45,54 @@ end
  * Once stop bit gets high, break from the loop, and return from the task
  */
 task wait_for_i2c_transfer (output i2c_op_t op, output bit [I2C_DATA_WIDTH-1:0] write_data []);
-	bit [I2C_DATA_WIDTH-1:0] wdata; // 8-bit write data, temp variable
-
+	bit [I2C_DATA_WIDTH-1:0] wdata; // 8-bit write data, temp variable	
 	int i;
-
-	bit [6:0] address; // 7-bit address
 	bit ack; // Acknowlege bit
 
 	wait(start);
 	start = 1'b0;
+	stop = 1'b0;
 
 	// Capture the 7-bit address
 	for(i = I2C_ADDR_WIDTH - 1; i >= 0; i--) begin
 		// Capture the SDA bit on the rising edge of SCL
 		@(posedge scl)		
-		address[i] = sda;
+		saddr[i] = sda;
 	end
 
 	// Get the R/W bit
 	@(posedge scl)
 	observed_op = sda;
-	
 	op = observed_op;
+	
+	// Ack/Nack
+	@(posedge scl)
+	ack = 1'b1;
 
-	if(op == READ) begin
-		ack = 1'b1;
-		return;
-	end else begin
-		ack = 1'b1;
-		
-		// Capture the 8-bit data till stop bit
-		while(!stop) begin
-			for(i = I2C_DATA_WIDTH - 1; i >=0 ; i--) begin
-				@(posedge scl)
-				wdata[i] = sda; 			
-			end
-			wdata_buffer.push_back(wdata);
-			
-			// Ack/Nack
+	if(op == READ) return;
+
+	fork begin
+		while(1) begin
+
+		for(i = I2C_DATA_WIDTH - 1; i >=0 ; i--) begin
 			@(posedge scl)
-			ack = 1'b1;
+			wdata[i] = sda; 			
+		end
+		wdata_buffer.push_back(wdata);
+
+		@(posedge scl)
+		ack = 0;
+
 		end
 	end
 
+	wait(stop);
+	
+	join_any;
+	disable fork;
+
 	// Copy the data from the buffer to ouput parameter write_data
 	write_data = wdata_buffer;
-
-	// Delete the buffer once done
-	wdata_buffer.delete();
 		
 endtask
 
@@ -130,36 +132,21 @@ task monitor (output bit [I2C_ADDR_WIDTH-1:0] addr, output i2c_op_t op, output b
 
 	wait(start);
 
-	
-        // Capture the 7-bit address
-        observed_addr = 0;
-        for (i = I2C_ADDR_WIDTH - 1; i >= 0; i--) begin
-            @(posedge scl); // Wait for rising edge of SCL
-            observed_addr[i] = sda; // Capture SDA bit
-        end
+	wait(!start);
 
-	
-	// Capture the R/W bit (next clock cycle)
-        @(posedge scl);
-        observed_op = sda; // 1 for READ, 0 for WRITE
+	wait(stop);
 
-        // Output the captured address and operation
-        addr = observed_addr;
-        op = observed_op;
+	addr = saddr;
+	op = observed_op;
 
-	while(!stop) begin
-	
-		for(i = I2C_DATA_WIDTH; i >= 0; i++) begin
-			@(posedge scl)
-			m_data = sda;
-		end
-
-		observed_data.push_back(m_data);
-		@(posedge scl)
-		ack = 1'b1;
+	if(op == WRITE) begin
+		data = wdata_buffer;
 	end
 
-	data = observed_data;
+	
+	// Delete the buffer once done
+	wdata_buffer.delete();
+
 		
 endtask
 
