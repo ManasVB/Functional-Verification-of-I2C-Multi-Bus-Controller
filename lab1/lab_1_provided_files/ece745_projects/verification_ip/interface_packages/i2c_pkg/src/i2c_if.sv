@@ -38,7 +38,7 @@ always@(negedge sda) begin
 		rep_start = 1'b1;
 end
 
-assign sda = write_en ? (rdata) : 1'bz; //(ack_enable ? ack : 1'bz);
+assign sda = write_en ? (ack || rdata) : 1'bz; //(ack_enable ? ack : 1'bz);
 
 /* Wait for the i2c_transfer to complete.
  * First wait for start bit to go high. After that set it to 0.
@@ -70,12 +70,13 @@ task wait_for_i2c_transfer (output i2c_op_t op, output bit [I2C_DATA_WIDTH-1:0] 
 	op = observed_op;
 	
 	// Ack/Nack
-	//write_en = 1'b1;
-	//ack = 1'b1;
+	@(negedge scl);
+	write_en = 1'b1;
+	ack = 1'b1;
 	@(posedge scl);
-	//@(negedge scl);
-	//write_en = 1'b0;
-	//ack = 1'b0;
+	@(negedge scl);
+	write_en = 1'b0;
+	ack = 1'b0;
 
 	if(op == READ) return;
 
@@ -84,23 +85,24 @@ task wait_for_i2c_transfer (output i2c_op_t op, output bit [I2C_DATA_WIDTH-1:0] 
 	fork begin
 		while(1) begin
 
-		for(int i = I2C_DATA_WIDTH - 1; i >=0 ; i--) begin
-			@(posedge scl);
-			wdata[i] = sda; 			
-		end
-		wdata_buffer.push_back(wdata);
+			for(int i = I2C_DATA_WIDTH - 1; i >=0 ; i--) begin
+				@(posedge scl);
+				wdata[i] = sda; 			
+			end
+			wdata_buffer.push_back(wdata);
 
-		
-		//write_en = 1'b1;
-		//ack = 1'b1;
-		@(posedge scl);
-		//@(negedge scl);
-		//write_en = 1'b0;
-		//ack = 1'b0;
+			@(negedge scl);
+			write_en = 1'b1;
+			ack = 1'b1;
+			@(posedge scl);
+			@(negedge scl);
+			write_en = 1'b0;
+			ack = 1'b0;
 		end
 	end
 
-	wait(stop);
+	//wait(start);
+	wait(start || stop);
 	
 	join_any;
 	disable fork;
@@ -140,18 +142,16 @@ task provide_read_data (input bit [I2C_DATA_WIDTH-1:0] read_data [], output bit 
 				write_en = 1'b0;
 			end
 			
-			//write_en = 1'b1;
+			write_en = 1'b1;
 			ack = 1'b1;
 			@(posedge scl);
-			//@(negedge scl);
-			//write_en = 1'b0;
-			//@(negedge scl);
-			//ack_enable = 1'b0;
-			
+			@(negedge scl);
+			write_en = 1'b0;
+			ack = 1'b0;
 		end
 	end
 
-	wait(stop || rep_start);
+	wait(stop || start);
 	join;
 
 	disable fork;
@@ -176,6 +176,8 @@ task monitor (output bit [I2C_ADDR_WIDTH-1:0] addr, output i2c_op_t op, output b
 	else
 		data = rdata_buffer;
 
+	wdata_buffer.delete();
+	rdata_buffer.delete();
 endtask
 
 endinterface

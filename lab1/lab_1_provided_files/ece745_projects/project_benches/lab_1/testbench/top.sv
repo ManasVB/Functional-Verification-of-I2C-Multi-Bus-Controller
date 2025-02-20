@@ -31,7 +31,8 @@ parameter FSMR_Reg = 8'h03;
 
 bit op;
 bit [I2C_DATA_WIDTH-1:0] write_data [$];
-
+bit todo_type;
+int rwdata = 64, inc_data, dec_data;
 // ****************************************************************************
 // Clock generator
 initial  
@@ -151,6 +152,7 @@ initial
 
 
 	// Read 32 values from the i2c_bus -> Return incrementing data from 100 to 131
+	todo_type = 0;
 
 	wb_bus.master_write(CMDR_Reg, 8'bxxxx_x100);	// Start Command
 	wait(irq == 1);
@@ -177,25 +179,75 @@ initial
 	wb_bus.master_write(CMDR_Reg, 8'bxxxx_x101);	// Stop Command
 	wait(irq == 1);
 	wb_bus.master_read(CMDR_Reg, recv_data);
+
+	// Alternate writes and reads for 64 transfers
+	todo_type = 1;
+	inc_data = rwdata;
+	dec_data = rwdata-1;
+	repeat(rwdata) begin
+		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x100); // Start Command
+		wait(irq == 1);
+		wb_bus.master_read(CMDR_Reg, recv_data);
+
+		wb_bus.master_write(DPR_Reg, 8'h44); // Set Slave address 22 and op = write (0x22 << 1 | 0)
+		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x001);	// Write Command
+		wait(irq == 1);
+		wb_bus.master_read(CMDR_Reg, recv_data);
 	
- 	$finish;
+		wb_bus.master_write(DPR_Reg, inc_data++);	// Byte is written
+		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x001);	// Write Command
+		wait(irq == 1);
+		wb_bus.master_read(CMDR_Reg, recv_data);		
+	
+		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x101);	// Stop Command
+		wait(irq == 1);
+		wb_bus.master_read(CMDR_Reg, recv_data);
+
+	
+		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x100); // Start Command
+		wait(irq == 1);
+		wb_bus.master_read(CMDR_Reg, recv_data);
+
+		wb_bus.master_write(DPR_Reg, 8'h45); // Set Slave address 22 and op = write (0x22 << 1 | 0)
+		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x001);	// Write Command
+		wait(irq == 1);
+		wb_bus.master_read(CMDR_Reg, recv_data);
+	
+
+		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x010);	// Read Command
+		wait(irq == 1);
+		wb_bus.master_read(CMDR_Reg, recv_data);
+		wb_bus.master_read(DPR_Reg, recv_i2c_data);
+	
+		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x011);
+		wait(irq == 1);
+		wb_bus.master_read(CMDR_Reg, recv_data);
+		wb_bus.master_read(DPR_Reg, recv_i2c_data);	
+
+		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x101);	// Stop Command
+		wait(irq == 1);
+		wb_bus.master_read(CMDR_Reg, recv_data);
+	end
+ 	
+	$finish;
 end
 
 initial begin
 	bit transfer_complete = 1'b0;
 	int i = 0;
 	bit [I2C_DATA_WIDTH - 1 : 0] read_data [];
-	
-	
-	read_data = new[32];
-	foreach(read_data[i])
-		read_data[i] = 100 + i;
-	
+		
 	forever begin
 		i2c_bus.wait_for_i2c_transfer(op, write_data);
 		if(op == 1) begin
+			if(todo_type == 0) begin	
+				read_data = new[32];
+				foreach(read_data[i])
+					read_data[i] = 100 + i;
 				i2c_bus.provide_read_data(read_data, transfer_complete);
-		end
+			end else
+				i2c_bus.provide_read_data('{dec_data--}, transfer_complete);
+		end 
 	end
 end
 
@@ -209,14 +261,14 @@ initial
 	
 	forever begin
 		i2c_bus.monitor(monitor_addr, monitor_op, monitor_data);
-		$display("*************************************************************************************************");
+		//$display("*************************************************************************************************");
 		
 		if(monitor_op == 0)
 			foreach(monitor_data[i])
 				$display("I2C_BUS WRITE Transfer: Address: 0x%0h, Data: %d", monitor_addr, monitor_data[i]);
 		else
 			foreach(monitor_data[i])
-				$display("I2C_BUS READ Transfer: Address: 0x%0h, Data: %d", monitor_addr, monitor_data[i]);
+				$display("I2C_BUS  READ Transfer: Address: 0x%0h, Data: %d", monitor_addr, monitor_data[i]);
 	end 
 end
 // ****************************************************************************
