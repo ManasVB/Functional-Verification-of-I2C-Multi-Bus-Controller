@@ -13,9 +13,12 @@ bit ack = 1'b0, nack = 1'b0;
 
 bit [I2C_DATA_WIDTH-1 :0] rdata_buffer [$]; // Unbounded buffer to hold all the read_data
 bit [I2C_DATA_WIDTH-1 :0] wdata_buffer [$]; // Unbounded buffer to hold all the write_data
+bit rdata;
 
 bit [I2C_ADDR_WIDTH-1 :0] saddr; // To store slave address
 i2c_op_t observed_op;
+
+bit write_en = 1'b0, ack_enable = 1'b0;
 
 // When SCL is high and SDA goes from high-low: start
 always@(negedge sda) begin
@@ -35,6 +38,8 @@ always@(negedge sda) begin
 		rep_start = 1'b1;
 end
 
+assign sda = write_en ? (rdata) : 1'bz; //(ack_enable ? ack : 1'bz);
+
 /* Wait for the i2c_transfer to complete.
  * First wait for start bit to go high. After that set it to 0.
  * After start bit get the 7-bit address.
@@ -46,7 +51,6 @@ end
  */
 task wait_for_i2c_transfer (output i2c_op_t op, output bit [I2C_DATA_WIDTH-1:0] write_data []);
 	bit [I2C_DATA_WIDTH-1:0] wdata; // 8-bit write data, temp variable	
-	int i;
 	bit ack; // Acknowlege bit
 
 	wait(start);
@@ -54,35 +58,45 @@ task wait_for_i2c_transfer (output i2c_op_t op, output bit [I2C_DATA_WIDTH-1:0] 
 	stop = 1'b0;
 
 	// Capture the 7-bit address
-	for(i = I2C_ADDR_WIDTH - 1; i >= 0; i--) begin
+	for(int i = I2C_ADDR_WIDTH - 1; i >= 0; i--) begin
 		// Capture the SDA bit on the rising edge of SCL
-		@(posedge scl)		
+		@(posedge scl);		
 		saddr[i] = sda;
 	end
 
 	// Get the R/W bit
-	@(posedge scl)
+	@(posedge scl);
 	observed_op = sda;
 	op = observed_op;
 	
 	// Ack/Nack
-	@(posedge scl)
-	ack = 1'b1;
+	//write_en = 1'b1;
+	//ack = 1'b1;
+	@(posedge scl);
+	//@(negedge scl);
+	//write_en = 1'b0;
+	//ack = 1'b0;
 
 	if(op == READ) return;
+
+	write_en = 1'b0;
 
 	fork begin
 		while(1) begin
 
-		for(i = I2C_DATA_WIDTH - 1; i >=0 ; i--) begin
-			@(posedge scl)
+		for(int i = I2C_DATA_WIDTH - 1; i >=0 ; i--) begin
+			@(posedge scl);
 			wdata[i] = sda; 			
 		end
 		wdata_buffer.push_back(wdata);
 
-		@(posedge scl)
-		ack = 0;
-
+		
+		//write_en = 1'b1;
+		//ack = 1'b1;
+		@(posedge scl);
+		//@(negedge scl);
+		//write_en = 1'b0;
+		//ack = 1'b0;
 		end
 	end
 
@@ -100,41 +114,59 @@ endtask
  * repeated start is detected. 
  */
 task provide_read_data (input bit [I2C_DATA_WIDTH-1:0] read_data [], output bit transfer_complete);
-	bit [I2C_DATA_WIDTH-1 :0] rdata;	
-	int i,j;
-
-		// Capture the read data and push into the queue
-	for(i = 0; i < read_data.size(); i++) begin
-		for(j = I2C_DATA_WIDTH; j >= 0; j--) begin
-			@(posedge scl)
-			rdata = read_data[i][j];	
-		end
 	
-		rdata_buffer.push_back(rdata);
-		
-		@(posedge scl)
-		ack = 1'b1;
+	int i;
+	rdata_buffer = read_data;	
+	fork
+	begin
 
-		if(stop || rep_start)
-			break;
+		foreach(read_data[i]) begin
+			for(int j = I2C_DATA_WIDTH - 1; j >=0; j--) begin
+				@(negedge scl)
+				rdata = read_data[i][j];
+			end
+				@(negedge scl);
+		end
+
 	end
 
+	begin
+
+		foreach(read_data[i]) begin
+			repeat(I2C_DATA_WIDTH) begin
+				write_en = 1'b1;
+				@(posedge scl);
+				@(negedge scl);
+				write_en = 1'b0;
+			end
+			
+			//write_en = 1'b1;
+			ack = 1'b1;
+			@(posedge scl);
+			//@(negedge scl);
+			//write_en = 1'b0;
+			//@(negedge scl);
+			//ack_enable = 1'b0;
+			
+		end
+	end
+
+	wait(stop || rep_start);
+	join;
+
+	disable fork;
+
 	transfer_complete = 1'b1;
+
 endtask
 
-task monitor (output bit [I2C_ADDR_WIDTH-1:0] addr, output i2c_op_t op, output bit [I2C_DATA_WIDTH-1:0] data []);
-
-        bit [I2C_ADDR_WIDTH-1:0] observed_addr;  // To store captured address
-        bit [I2C_DATA_WIDTH-1:0] observed_data [$];  // To store captured data
-        bit ack;  // To store acknowledgment bit
-	int i;
-        bit [I2C_DATA_WIDTH-1:0] m_data;
+task monitor (output bit [I2C_ADDR_WIDTH-1:0] addr, output i2c_op_t op, output bit [I2C_DATA_WIDTH-1:0] data [$]);
 
 	wait(start);
 
 	wait(!start);
 
-	wait(stop);
+	wait(start || stop);
 
 	addr = saddr;
 	op = observed_op;
@@ -144,11 +176,6 @@ task monitor (output bit [I2C_ADDR_WIDTH-1:0] addr, output i2c_op_t op, output b
 	else
 		data = rdata_buffer;
 
-	
-	// Delete the buffers once done
-	wdata_buffer.delete();
-	rdata_buffer.delete();
-	
 endtask
 
 endinterface

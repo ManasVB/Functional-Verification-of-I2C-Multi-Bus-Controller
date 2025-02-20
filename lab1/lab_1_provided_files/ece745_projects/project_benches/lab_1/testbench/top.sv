@@ -20,7 +20,7 @@ wire [WB_DATA_WIDTH-1:0] dat_wr_o;
 wire [WB_DATA_WIDTH-1:0] dat_rd_i;
 wire irq;
 tri  [NUM_I2C_BUSSES-1:0] scl;
-tri  [NUM_I2C_BUSSES-1:0] sda;
+triand  [NUM_I2C_BUSSES-1:0] sda;
 
 parameter CLK_PHASE = 5;
 parameter RESET = 113;
@@ -30,7 +30,7 @@ parameter CMDR_Reg = 8'h02;
 parameter FSMR_Reg = 8'h03;
 
 bit op;
-bit [I2C_DATA_WIDTH-1:0] write_data [];
+bit [I2C_DATA_WIDTH-1:0] write_data [$];
 
 // ****************************************************************************
 // Clock generator
@@ -76,6 +76,7 @@ end // if(0)
 initial
   begin : test_flow
 	bit [WB_DATA_WIDTH-1:0] recv_data;
+	bit [I2C_DATA_WIDTH-1:0] recv_i2c_data;
 	#RESET; // Wait for reset
 
 	wb_bus.master_write(CSR_Reg, 8'b11xx_xxxx);	// Enable the IICMB core after power-up
@@ -132,7 +133,7 @@ initial
 	wait(irq == 1);
 	wb_bus.master_read(CMDR_Reg, recv_data);
 
-	wb_bus.master_write(DPR_Reg, 8'h44); // Set Slave address 22
+	wb_bus.master_write(DPR_Reg, 8'h44); // Set Slave address 22 and op = write (0x22 << 1 | 0)
 	wb_bus.master_write(CMDR_Reg, 8'bxxxx_x001);	// Write Command
 	wait(irq == 1);
 	wb_bus.master_read(CMDR_Reg, recv_data);
@@ -151,16 +152,51 @@ initial
 
 	// Read 32 values from the i2c_bus -> Return incrementing data from 100 to 131
 
-	
+	wb_bus.master_write(CMDR_Reg, 8'bxxxx_x100);	// Start Command
+	wait(irq == 1);
+	wb_bus.master_read(CMDR_Reg, recv_data);
 
+	wb_bus.master_write(DPR_Reg, 8'h45); // Set Slave address 22 and op = read (0x22 << 1 | 1)
+	wb_bus.master_write(CMDR_Reg, 8'bxxxx_x001);	// Write Command
+	wait(irq == 1);
+	wb_bus.master_read(CMDR_Reg, recv_data);
+
+	repeat(32) begin
+		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x010);	// Read Command
+		wait(irq == 1);
+		wb_bus.master_read(CMDR_Reg, recv_data);
+		wb_bus.master_read(DPR_Reg, recv_i2c_data);
+		// $display("read data %d", recv_i2c_data); // Get the read data in 'recv_i2c_data' 
+	end
+
+	wb_bus.master_write(CMDR_Reg, 8'bxxxx_x011);
+	wait(irq == 1);
+	wb_bus.master_read(CMDR_Reg, recv_data);
+	wb_bus.master_read(DPR_Reg, recv_i2c_data);	
+
+	wb_bus.master_write(CMDR_Reg, 8'bxxxx_x101);	// Stop Command
+	wait(irq == 1);
+	wb_bus.master_read(CMDR_Reg, recv_data);
+	
  	$finish;
 end
 
 initial begin
+	bit transfer_complete = 1'b0;
+	int i = 0;
+	bit [I2C_DATA_WIDTH - 1 : 0] read_data [];
+	
+	
+	read_data = new[32];
+	foreach(read_data[i])
+		read_data[i] = 100 + i;
+	
 	forever begin
 		i2c_bus.wait_for_i2c_transfer(op, write_data);
+		if(op == 1) begin
+				i2c_bus.provide_read_data(read_data, transfer_complete);
+		end
 	end
-
 end
 
 initial 
@@ -171,16 +207,16 @@ initial
 	bit monitor_op;
 	int i;
 	
-	forever begin #5
-
+	forever begin
 		i2c_bus.monitor(monitor_addr, monitor_op, monitor_data);
+		$display("*************************************************************************************************");
 		
-		if(monitor_op == 1)
-			foreach(monitor_data[i])
-				$display("I2C_BUS READ Transfer: Address: 0x%0h, Data: %d", monitor_addr, monitor_data[i]);
-		else
+		if(monitor_op == 0)
 			foreach(monitor_data[i])
 				$display("I2C_BUS WRITE Transfer: Address: 0x%0h, Data: %d", monitor_addr, monitor_data[i]);
+		else
+			foreach(monitor_data[i])
+				$display("I2C_BUS READ Transfer: Address: 0x%0h, Data: %d", monitor_addr, monitor_data[i]);
 	end 
 end
 // ****************************************************************************
