@@ -10,6 +10,7 @@ add wave -noupdate /top/DUT/we_i
 add wave -noupdate /top/DUT/dat_i
 add wave -noupdate /top/DUT/dat_o
 add wave -noupdate /top/DUT/irq
+add wave -noupdate -divider {I2C Signals}
 add wave -noupdate /top/DUT/scl_i
 add wave -noupdate /top/DUT/sda_i
 add wave -noupdate /top/DUT/scl_o
