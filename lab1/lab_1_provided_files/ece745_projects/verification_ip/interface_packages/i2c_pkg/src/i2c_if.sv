@@ -9,7 +9,7 @@ inout scl, inout triand sda
 typedef enum bit {WRITE = 1'b0, READ = 1'b1} i2c_op_t;
 
 bit start = 1'b0, stop = 1'b0, rep_start = 1'b0;
-bit ack = 1'b0, nack = 1'b0;
+bit ack = 1'b1;
 
 bit [I2C_DATA_WIDTH-1 :0] rdata_buffer [$]; // Unbounded buffer to hold all the read_data
 bit [I2C_DATA_WIDTH-1 :0] wdata_buffer [$]; // Unbounded buffer to hold all the write_data
@@ -51,7 +51,8 @@ assign sda = write_en ? (ack || rdata) : 1'bz; //(ack_enable ? ack : 1'bz);
  */
 task wait_for_i2c_transfer (output i2c_op_t op, output bit [I2C_DATA_WIDTH-1:0] write_data []);
 	bit [I2C_DATA_WIDTH-1:0] wdata; // 8-bit write data, temp variable	
-	bit ack; // Acknowlege bit
+	//automatic bit ack = 1'b1; // Acknowlege bit
+	int itr;
 
 	wait(start);
 	start = 1'b0;
@@ -72,11 +73,11 @@ task wait_for_i2c_transfer (output i2c_op_t op, output bit [I2C_DATA_WIDTH-1:0] 
 	// Ack/Nack
 	@(negedge scl);
 	write_en = 1'b1;
-	ack = 1'b1;
+	ack = 1'b0;
 	@(posedge scl);
 	@(negedge scl);
 	write_en = 1'b0;
-	ack = 1'b0;
+	ack = 1'b1;
 
 	if(op == READ) return;
 
@@ -85,19 +86,28 @@ task wait_for_i2c_transfer (output i2c_op_t op, output bit [I2C_DATA_WIDTH-1:0] 
 	fork begin
 		while(1) begin
 
-			for(int i = I2C_DATA_WIDTH - 1; i >=0 ; i--) begin
+			for(itr = I2C_DATA_WIDTH - 1; itr >=0 ; itr--) begin
 				@(posedge scl);
-				wdata[i] = sda; 			
+				wdata[itr] = sda; 			
 			end
 			wdata_buffer.push_back(wdata);
 
+			if(itr == 0) begin
 			@(negedge scl);
 			write_en = 1'b1;
 			ack = 1'b1;
 			@(posedge scl);
 			@(negedge scl);
 			write_en = 1'b0;
+			end else begin
+			@(negedge scl);
+			write_en = 1'b1;
 			ack = 1'b0;
+			@(posedge scl);
+			@(negedge scl);
+			write_en = 1'b0;
+			ack = 1'b1;
+			end
 		end
 	end
 
@@ -134,7 +144,7 @@ task provide_read_data (input bit [I2C_DATA_WIDTH-1:0] read_data [], output bit 
 
 	begin
 
-		foreach(read_data[i]) begin
+		for(int itr = 0; itr < read_data.size(); itr++) begin
 			repeat(I2C_DATA_WIDTH) begin
 				write_en = 1'b1;
 				@(posedge scl);
@@ -142,12 +152,21 @@ task provide_read_data (input bit [I2C_DATA_WIDTH-1:0] read_data [], output bit 
 				write_en = 1'b0;
 			end
 			
+			if(itr == (read_data.size() - 1)) begin
 			write_en = 1'b1;
 			ack = 1'b1;
 			@(posedge scl);
 			@(negedge scl);
 			write_en = 1'b0;
+			end else begin
+			write_en = 1'b1;
 			ack = 1'b0;
+			@(posedge scl);
+			@(negedge scl);
+			write_en = 1'b0;
+			ack = 1'b1;
+
+			end
 		end
 	end
 

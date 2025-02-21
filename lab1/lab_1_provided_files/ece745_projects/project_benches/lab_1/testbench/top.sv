@@ -1,4 +1,5 @@
 `timescale 1ns / 10ps
+//`define LAB1 // Uncomment to run Lab-1 test flow and WB Monitor
 
 module top();
 
@@ -51,7 +52,7 @@ initial
   end
 // ****************************************************************************
 
-if(0) begin
+`ifdef LAB1
 	// Monitor Wishbone bus and display transfers in the transcript - Currently disabled
 	initial
 	  begin : wb_monitoring
@@ -69,7 +70,7 @@ if(0) begin
 		end 
 		
 	  end
-end // if(0)
+`endif // LAB1
 
 // ****************************************************************************
 // Define the flow of the simulation
@@ -91,7 +92,7 @@ initial
 	wb_bus.master_read(CMDR_Reg, recv_data);
 
 	
-	if(0) begin
+	`ifdef LAB1
 		/******* Lab-1 Test Flow Starts ******* - Currently disabled */
 
 		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x100);	// Start Command
@@ -124,7 +125,7 @@ initial
 
 		/******* Lab-1 Test Flow Ends *******/
 
-	end
+	`endif // LAB1
 
 	/******* Project-1 Test Flow Starts *******/
 
@@ -164,14 +165,14 @@ initial
 	wb_bus.master_read(CMDR_Reg, recv_data);
 
 	repeat(32) begin
-		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x010);	// Read Command
+		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x010);	// Read with ACK Command
 		wait(irq == 1);
 		wb_bus.master_read(CMDR_Reg, recv_data);
 		wb_bus.master_read(DPR_Reg, recv_i2c_data);
 		// $display("read data %d", recv_i2c_data); // Get the read data in 'recv_i2c_data' 
 	end
 
-	wb_bus.master_write(CMDR_Reg, 8'bxxxx_x011);
+	wb_bus.master_write(CMDR_Reg, 8'bxxxx_x011); // Read with NACK
 	wait(irq == 1);
 	wb_bus.master_read(CMDR_Reg, recv_data);
 	wb_bus.master_read(DPR_Reg, recv_i2c_data);	
@@ -223,7 +224,8 @@ initial
 		wait(irq == 1);
 		wb_bus.master_read(CMDR_Reg, recv_data);
 		wb_bus.master_read(DPR_Reg, recv_i2c_data);	
-
+         
+          
 		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x101);	// Stop Command
 		wait(irq == 1);
 		wb_bus.master_read(CMDR_Reg, recv_data);
@@ -240,12 +242,12 @@ initial begin
 	forever begin
 		i2c_bus.wait_for_i2c_transfer(op, write_data);
 		if(op == 1) begin
-			if(todo_type == 0) begin	
+			if(todo_type == 0) begin	// For Q2. Incrementing reads
 				read_data = new[32];
 				foreach(read_data[i])
 					read_data[i] = 100 + i;
 				i2c_bus.provide_read_data(read_data, transfer_complete);
-			end else
+			end else	// For Q3. decrementing reads
 				i2c_bus.provide_read_data('{dec_data--}, transfer_complete);
 		end 
 	end
