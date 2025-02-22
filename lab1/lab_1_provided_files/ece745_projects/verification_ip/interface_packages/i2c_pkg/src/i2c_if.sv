@@ -8,7 +8,7 @@ inout scl, inout triand sda
 
 typedef enum bit {WRITE = 1'b0, READ = 1'b1} i2c_op_t;
 
-bit start = 1'b0, stop = 1'b0, rep_start = 1'b0;
+bit start = 1'b0, stop = 1'b0;
 bit ack = 1'b1;
 
 bit [I2C_DATA_WIDTH-1 :0] rdata_buffer [$]; // Unbounded buffer to hold all the read_data
@@ -30,12 +30,6 @@ end
 always@(posedge sda) begin
 	if(scl)
 		stop = 1'b1;
-end
-
-// When SCL is low and SDA goes from low-high: repeated_start
-always@(negedge sda) begin
-	if(!scl)
-		rep_start = 1'b1;
 end
 
 assign sda = write_en ? (ack || rdata) : 1'bz; //(ack_enable ? ack : 1'bz);
@@ -92,14 +86,6 @@ task wait_for_i2c_transfer (output i2c_op_t op, output bit [I2C_DATA_WIDTH-1:0] 
 			end
 			wdata_buffer.push_back(wdata);
 
-			if(itr == 0) begin
-			@(negedge scl);
-			write_en = 1'b1;
-			ack = 1'b1;
-			@(posedge scl);
-			@(negedge scl);
-			write_en = 1'b0;
-			end else begin
 			@(negedge scl);
 			write_en = 1'b1;
 			ack = 1'b0;
@@ -107,11 +93,9 @@ task wait_for_i2c_transfer (output i2c_op_t op, output bit [I2C_DATA_WIDTH-1:0] 
 			@(negedge scl);
 			write_en = 1'b0;
 			ack = 1'b1;
-			end
 		end
 	end
 
-	//wait(start);
 	wait(start || stop);
 	
 	join_any;

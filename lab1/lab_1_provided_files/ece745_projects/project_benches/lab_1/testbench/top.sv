@@ -198,12 +198,11 @@ initial
 		wb_bus.master_write(DPR_Reg, inc_data++);	// Byte is written
 		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x001);	// Write Command
 		wait(irq == 1);
-		wb_bus.master_read(CMDR_Reg, recv_data);		
-	
+		wb_bus.master_read(CMDR_Reg, recv_data);
+
 		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x101);	// Stop Command
 		wait(irq == 1);
 		wb_bus.master_read(CMDR_Reg, recv_data);
-
 	
 		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x100); // Start Command
 		wait(irq == 1);
@@ -214,23 +213,16 @@ initial
 		wait(irq == 1);
 		wb_bus.master_read(CMDR_Reg, recv_data);
 	
-
-		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x010);	// Read Command
+		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x011);	// Read with NACK Command
 		wait(irq == 1);
 		wb_bus.master_read(CMDR_Reg, recv_data);
 		wb_bus.master_read(DPR_Reg, recv_i2c_data);
-	
-		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x011);
-		wait(irq == 1);
-		wb_bus.master_read(CMDR_Reg, recv_data);
-		wb_bus.master_read(DPR_Reg, recv_i2c_data);	
-         
-          
+        
 		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x101);	// Stop Command
 		wait(irq == 1);
 		wb_bus.master_read(CMDR_Reg, recv_data);
 	end
- 	
+
 	$finish;
 end
 
