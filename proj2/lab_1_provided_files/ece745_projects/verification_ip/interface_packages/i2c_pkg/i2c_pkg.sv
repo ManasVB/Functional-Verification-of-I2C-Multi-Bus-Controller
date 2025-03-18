@@ -4,7 +4,7 @@ package i2c_pkg;
 
  	`include "ncsu_macros.svh"
 
-	`include "src/i2c_typedefs.svh"
+	`include "src/i2c_typedef.svh"
  	
  	`include "src/i2c_configuration.svh"
 	`include "src/i2c_transaction.svh"

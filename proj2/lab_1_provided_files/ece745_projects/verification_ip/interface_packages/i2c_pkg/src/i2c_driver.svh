@@ -4,7 +4,7 @@ class i2c_driver extends ncsu_component#(.T(i2c_transaction_base));
     super.new(name,parent);
   endfunction
 
-  virtual i2c_if i2c_bus;
+  virtual i2c_if bus;
 
   i2c_configuration configuration;
   i2c_transaction_base i2c_trans;
@@ -14,10 +14,12 @@ class i2c_driver extends ncsu_component#(.T(i2c_transaction_base));
   endfunction
 
   virtual task bl_put(T trans);
-    i2c_bus.wait_for_i2c_transfer(trans.i2c_op, trans.i2c_data);
+    ncsu_info("i2c_driver::run()", {get_full_name(), "-", trans.convert2string()}, NCSU_NONE);
+    
+    bus.wait_for_i2c_transfer(trans.i2c_op, trans.i2c_data);
 
     if(trans.i2c_op == READ)
-      i2c_bus.provide_read_data(trans.i2c_data, trans.complete);
+      bus.provide_read_data(trans.i2c_data, trans.complete);
   endtask
 
 endclass
