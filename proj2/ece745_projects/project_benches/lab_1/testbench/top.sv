@@ -69,6 +69,7 @@ module top();
 		// System sigals
 		.clk_i(clk),
 		.rst_i(rst),
+		.irq_i(irq),
 		// Master signals
 		.cyc_o(cyc),
 		.stb_o(stb),
