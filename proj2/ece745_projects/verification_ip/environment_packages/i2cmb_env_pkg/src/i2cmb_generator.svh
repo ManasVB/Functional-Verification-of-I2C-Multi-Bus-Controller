@@ -9,6 +9,10 @@ class generator extends ncsu_component;
   string trans_name;
   bit todo_type;
   int rwdata = 64, inc_data, dec_data;
+  bit [WB_DATA_WIDTH-1:0] wb_recv_data;
+
+  parameter bit WB_WRITE = 1'b0;
+  parameter bit WB_READ = 1'b1;
 
   function new(string name="", ncsu_component_base parent = null);
     super.new(name, parent);
@@ -27,68 +31,23 @@ class generator extends ncsu_component;
   fork
     run_wishbone();
 
-    // run_i2c();
+    run_i2c();
   join
     
   endtask
 
   virtual task run_wishbone();
 
-    bit [WB_DATA_WIDTH-1:0] recv_data;
-    bit [I2C_DATA_WIDTH-1:0] recv_i2c_data;
-
     wb_trans = new("wb_trans");
-  
-    // Enable the IICMB core after power-up
-    wb_trans.wb_addr = CSR_Reg;
-    wb_trans.wb_data = 8'b11xx_xxxx;
-    wb_trans.op_sel = 1; wb_trans.wb_irq = 0;
-    p0_agent.bl_put(wb_trans);
 
-    //Write a byte 0x78 to a slave with address 0x22, residing on I2C bus #5.
-    wb_trans.wb_addr = DPR_Reg;
-    wb_trans.wb_data = 8'h05;
-    wb_trans.op_sel = 1; wb_trans.wb_irq = 0;
-    p0_agent.bl_put(wb_trans);
+    wb_init();
 
-    wb_trans.wb_addr = CMDR_Reg; 
-    wb_trans.wb_data = 8'bxxxx_x110;
-    wb_trans.op_sel = 1; wb_trans.wb_irq = 1;
-    p0_agent.bl_put(wb_trans);  // Set Bus Command
+    wb_start();
 
-    wb_trans.wb_addr = CMDR_Reg;
-    wb_trans.wb_data = recv_data;
-    wb_trans.op_sel = 0; wb_trans.wb_irq = 0;
-    p0_agent.bl_put(wb_trans);
-
-    // Start Command
-    wb_trans.wb_addr = CMDR_Reg; 
-    wb_trans.wb_data = 8'bxxxx_x100;
-    wb_trans.op_sel = 1; wb_trans.wb_irq = 1;
-    p0_agent.bl_put(wb_trans);
-
-    wb_trans.wb_addr = CMDR_Reg;
-    wb_trans.wb_data = recv_data;
-    wb_trans.op_sel = 0; wb_trans.wb_irq = 0;
-    p0_agent.bl_put(wb_trans);
-    
-    // Set Slave address 22 and op = write (0x22 << 1 | 0)
-    wb_trans.wb_addr = DPR_Reg;
-    wb_trans.wb_data = 8'h44;
-    wb_trans.op_sel = 1; wb_trans.wb_irq = 0;
-    p0_agent.bl_put(wb_trans);
-
-    wb_trans.wb_addr = CMDR_Reg; 
-    wb_trans.wb_data = 8'bxxxx_x001;
-    wb_trans.op_sel = 1; wb_trans.wb_irq = 1;
-    p0_agent.bl_put(wb_trans);
-
-    wb_trans.wb_addr = CMDR_Reg;
-    wb_trans.wb_data = recv_data;
-    wb_trans.op_sel = 0; wb_trans.wb_irq = 0;
-    p0_agent.bl_put(wb_trans);
+    wb_set_slave_params(22, WB_WRITE);
     
     // Write 32 incrementing values, from 0 to 31, to the i2c_bus
+    //for(int i = 0;i <= 31; ++i) begin
     wb_trans.wb_addr = DPR_Reg;
     wb_trans.wb_data = 31;
     wb_trans.op_sel = 1; wb_trans.wb_irq = 0;
@@ -100,13 +59,14 @@ class generator extends ncsu_component;
     p0_agent.bl_put(wb_trans);
 
     wb_trans.wb_addr = CMDR_Reg;
-    wb_trans.wb_data = recv_data;
+    wb_trans.wb_data = wb_recv_data;
     wb_trans.op_sel = 0; wb_trans.wb_irq = 0;
     p0_agent.bl_put(wb_trans);
 
-
+    wb_stop();
+    
+    //end
   endtask
-  
   
   virtual task run_i2c();
   
@@ -141,4 +101,79 @@ class generator extends ncsu_component;
     end
   endtask
 
+  task wb_init();
+
+    // Enable the IICMB core after power-up
+    wb_trans.wb_addr = CSR_Reg;
+    wb_trans.wb_data = 8'b11xx_xxxx;
+    wb_trans.op_sel = 1; wb_trans.wb_irq = 0;
+    p0_agent.bl_put(wb_trans);
+
+    //Write a byte 0x78 to a slave with address 0x22, residing on I2C bus #5.
+    wb_trans.wb_addr = DPR_Reg;
+    wb_trans.wb_data = 8'h05;
+    wb_trans.op_sel = 1; wb_trans.wb_irq = 0;
+    p0_agent.bl_put(wb_trans);
+
+    wb_trans.wb_addr = CMDR_Reg; 
+    wb_trans.wb_data = 8'bxxxx_x110;
+    wb_trans.op_sel = 1; wb_trans.wb_irq = 1;
+    p0_agent.bl_put(wb_trans);  // Set Bus Command
+
+    wb_trans.wb_addr = CMDR_Reg;
+    wb_trans.wb_data = wb_recv_data;
+    wb_trans.op_sel = 0; wb_trans.wb_irq = 0;
+    p0_agent.bl_put(wb_trans);
+
+  endtask
+
+  task wb_start();
+
+    // Start Command
+    wb_trans.wb_addr = CMDR_Reg; 
+    wb_trans.wb_data = 8'bxxxx_x100;
+    wb_trans.op_sel = 1; wb_trans.wb_irq = 1;
+    p0_agent.bl_put(wb_trans);
+
+    wb_trans.wb_addr = CMDR_Reg;
+    wb_trans.wb_data = wb_recv_data;
+    wb_trans.op_sel = 0; wb_trans.wb_irq = 0;
+    p0_agent.bl_put(wb_trans);
+
+  endtask
+
+  task wb_set_slave_params(input int slave_addr, input bit op);
+
+    // Set Slave address 22 and op = write (0x22 << 1 | 0)
+    wb_trans.wb_addr = DPR_Reg;
+    wb_trans.wb_data = ((slave_addr << 1) | op);
+    wb_trans.op_sel = 1; wb_trans.wb_irq = 0;
+    p0_agent.bl_put(wb_trans);
+
+    wb_trans.wb_addr = CMDR_Reg; 
+    wb_trans.wb_data = 8'bxxxx_x001;
+    wb_trans.op_sel = 1; wb_trans.wb_irq = 1;
+    p0_agent.bl_put(wb_trans);
+
+    wb_trans.wb_addr = CMDR_Reg;
+    wb_trans.wb_data = wb_recv_data;
+    wb_trans.op_sel = 0; wb_trans.wb_irq = 0;
+    p0_agent.bl_put(wb_trans);
+
+  endtask
+
+  task wb_stop();
+
+    wb_trans.wb_addr = CMDR_Reg; 
+    wb_trans.wb_data = 8'bxxxx_x101;
+    wb_trans.op_sel = 1; wb_trans.wb_irq = 1;
+    p0_agent.bl_put(wb_trans);
+
+
+    wb_trans.wb_addr = CMDR_Reg;
+    wb_trans.wb_data = wb_recv_data;
+    wb_trans.op_sel = 0; wb_trans.wb_irq = 0;
+    p0_agent.bl_put(wb_trans);
+
+  endtask
 endclass
