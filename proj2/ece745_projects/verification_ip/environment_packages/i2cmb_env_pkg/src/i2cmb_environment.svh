@@ -61,7 +61,7 @@ class environment extends ncsu_component;
   
   virtual task run();
     p0_agent.run();
-    // p1_agent.run();
+    p1_agent.run();
   endtask
 
 endclass

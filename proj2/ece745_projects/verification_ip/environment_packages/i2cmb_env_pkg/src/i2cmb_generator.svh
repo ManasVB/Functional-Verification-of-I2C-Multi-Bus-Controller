@@ -10,6 +10,7 @@ class generator extends ncsu_component;
   bit todo_type;
   int rwdata = 64, inc_data, dec_data;
   bit [WB_DATA_WIDTH-1:0] wb_recv_data;
+	bit [I2C_DATA_WIDTH-1:0] i2c_recv_data;
 
   parameter bit WB_WRITE = 1'b0;
   parameter bit WB_READ = 1'b1;
@@ -32,7 +33,9 @@ class generator extends ncsu_component;
     run_wishbone();
 
     run_i2c();
-  join
+  join_any
+
+  $finish;
     
   endtask
 
@@ -40,33 +43,43 @@ class generator extends ncsu_component;
 
     wb_trans = new("wb_trans");
 
-    wb_init();
+    this.wb_init();
 
-    wb_start();
-
-    wb_set_slave_params(22, WB_WRITE);
-    
     // Write 32 incrementing values, from 0 to 31, to the i2c_bus
-    //for(int i = 0;i <= 31; ++i) begin
-    wb_trans.wb_addr = DPR_Reg;
-    wb_trans.wb_data = 31;
-    wb_trans.op_sel = 1; wb_trans.wb_irq = 0;
-    p0_agent.bl_put(wb_trans);
+    this.wb_start();
+    this.wb_set_slave_params(8'h22, WB_WRITE);
+    for(int i = 0;i <= 31; ++i) begin
+      this.perform_write(i);
+    end
+    this.wb_stop();
 
-    wb_trans.wb_addr = CMDR_Reg; 
-    wb_trans.wb_data = 8'bxxxx_x001;
-    wb_trans.op_sel = 1; wb_trans.wb_irq = 1;
-    p0_agent.bl_put(wb_trans);
+    // Read 32 values from the i2c_bus -> Return incrementing data from 100 to 131
+    todo_type = 0;
+    this.wb_start();
+    this.wb_set_slave_params(8'h22, WB_READ);
+    repeat(32) begin
+      this.perform_read_ack();
+    end
+    this.perform_read_nack();
+    this.wb_stop();
 
-    wb_trans.wb_addr = CMDR_Reg;
-    wb_trans.wb_data = wb_recv_data;
-    wb_trans.op_sel = 0; wb_trans.wb_irq = 0;
-    p0_agent.bl_put(wb_trans);
+    // Alternate writes and reads for 64 transfers
+    todo_type = 1;
+    inc_data = rwdata;
+    dec_data = rwdata-1;
+    repeat(rwdata) begin
+      this.wb_start();
+      this.wb_set_slave_params(8'h22, WB_WRITE);
+      this.perform_write(inc_data++);
+      this.wb_stop();
 
-    wb_stop();
+      this.wb_start();
+      this.wb_set_slave_params(8'h22, WB_READ);
+      this.perform_read_nack();
+      this.wb_stop();
+    end
     
-    //end
-  endtask
+    endtask
   
   virtual task run_i2c();
   
@@ -128,7 +141,6 @@ class generator extends ncsu_component;
   endtask
 
   task wb_start();
-
     // Start Command
     wb_trans.wb_addr = CMDR_Reg; 
     wb_trans.wb_data = 8'bxxxx_x100;
@@ -139,12 +151,10 @@ class generator extends ncsu_component;
     wb_trans.wb_data = wb_recv_data;
     wb_trans.op_sel = 0; wb_trans.wb_irq = 0;
     p0_agent.bl_put(wb_trans);
-
   endtask
 
   task wb_set_slave_params(input int slave_addr, input bit op);
-
-    // Set Slave address 22 and op = write (0x22 << 1 | 0)
+    // Set Slave address and (slave_addr << 1 | (R/W))
     wb_trans.wb_addr = DPR_Reg;
     wb_trans.wb_data = ((slave_addr << 1) | op);
     wb_trans.op_sel = 1; wb_trans.wb_irq = 0;
@@ -159,21 +169,69 @@ class generator extends ncsu_component;
     wb_trans.wb_data = wb_recv_data;
     wb_trans.op_sel = 0; wb_trans.wb_irq = 0;
     p0_agent.bl_put(wb_trans);
-
   endtask
 
   task wb_stop();
-
+    // Stop Command
     wb_trans.wb_addr = CMDR_Reg; 
     wb_trans.wb_data = 8'bxxxx_x101;
     wb_trans.op_sel = 1; wb_trans.wb_irq = 1;
     p0_agent.bl_put(wb_trans);
 
+    wb_trans.wb_addr = CMDR_Reg;
+    wb_trans.wb_data = wb_recv_data;
+    wb_trans.op_sel = 0; wb_trans.wb_irq = 0;
+    p0_agent.bl_put(wb_trans);
+  endtask
+
+  task perform_write(input int data);
+    wb_trans.wb_addr = DPR_Reg;
+    wb_trans.wb_data = data;
+    wb_trans.op_sel = 1; wb_trans.wb_irq = 0;
+    p0_agent.bl_put(wb_trans);
+
+    wb_trans.wb_addr = CMDR_Reg; 
+    wb_trans.wb_data = 8'bxxxx_x001;
+    wb_trans.op_sel = 1; wb_trans.wb_irq = 1;
+    p0_agent.bl_put(wb_trans);
+
+    wb_trans.wb_addr = CMDR_Reg;
+    wb_trans.wb_data = wb_recv_data;
+    wb_trans.op_sel = 0; wb_trans.wb_irq = 0;
+    p0_agent.bl_put(wb_trans);
+  endtask
+
+  task perform_read_ack();
+    wb_trans.wb_addr = CMDR_Reg; 
+    wb_trans.wb_data = 8'bxxxx_x010;  // Read with ACK Command
+    wb_trans.op_sel = 1; wb_trans.wb_irq = 1;
+    p0_agent.bl_put(wb_trans);
 
     wb_trans.wb_addr = CMDR_Reg;
     wb_trans.wb_data = wb_recv_data;
     wb_trans.op_sel = 0; wb_trans.wb_irq = 0;
     p0_agent.bl_put(wb_trans);
 
+    wb_trans.wb_addr = DPR_Reg;
+    wb_trans.wb_data = i2c_recv_data;
+    wb_trans.op_sel = 0; wb_trans.wb_irq = 0;
+    p0_agent.bl_put(wb_trans);  
+  endtask;
+
+  task perform_read_nack();
+    wb_trans.wb_addr = CMDR_Reg; 
+    wb_trans.wb_data = 8'bxxxx_x011;  // Read with NACK Command
+    wb_trans.op_sel = 1; wb_trans.wb_irq = 1;
+    p0_agent.bl_put(wb_trans);
+
+    wb_trans.wb_addr = CMDR_Reg;
+    wb_trans.wb_data = wb_recv_data;
+    wb_trans.op_sel = 0; wb_trans.wb_irq = 0;
+    p0_agent.bl_put(wb_trans);
+
+    wb_trans.wb_addr = DPR_Reg;
+    wb_trans.wb_data = i2c_recv_data;
+    wb_trans.op_sel = 0; wb_trans.wb_irq = 0;
+    p0_agent.bl_put(wb_trans); 
   endtask
 endclass
