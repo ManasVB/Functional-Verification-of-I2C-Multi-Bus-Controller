@@ -46,17 +46,19 @@ initial
 // Monitor Wishbone bus and display transfers in the transcript
 initial
   begin : wb_monitoring
-	bit [WB_ADDR_WIDTH-1:0] monitor_addr;
-	bit [WB_DATA_WIDTH-1:0] monitor_data;
-	bit monitor_we;
-	
-	forever begin
-	
-	@(posedge clk)
-	wb_bus.master_monitor(monitor_addr, monitor_data, monitor_we);
-	$display(" Address: 0x%0h, Data: %x, Direction: %d", monitor_addr, monitor_data, monitor_we);
-	end
-	
+  bit [WB_ADDR_WIDTH-1:0] monitor_addr;
+  bit [WB_DATA_WIDTH-1:0] monitor_data;
+  bit monitor_we;
+  
+  forever begin
+  @(posedge clk)
+    wb_bus.master_monitor(monitor_addr, monitor_data, monitor_we);
+    if(!monitor_we)
+      $display("WB_BUS Address: 0x%0h, Data: %x, Direction: READ", monitor_addr, monitor_data);
+    else
+      $display("WB_BUS Address: 0x%0h, Data: %x, Direction: WRITE", monitor_addr, monitor_data);
+  end 
+  
   end
 
 // ****************************************************************************
@@ -67,51 +69,43 @@ initial
 	bit [WB_DATA_WIDTH-1:0] recv_data;
 	#RESET; // Wait for reset
 
-	wb_bus.master_write(CSR_Reg, 8'b11xx_xxxx);	// Enable the IICMB core after power-up
-	
-	//Write a byte 0x78 to a slave with address 0x22, residing on I2C bus #5.
-	
-	wb_bus.master_write(DPR_Reg, 8'h05);	// ID of Desired I2C Bus
-	
-	wb_bus.master_write(CMDR_Reg, 8'bxxxx_x110);	// Set Bus Command
-	
-	wait(irq == 1);
-	wb_bus.master_read(CMDR_Reg, recv_data);
+    wb_bus.master_write(CSR_Reg, 8'b11xx_xxxx);	// Enable the IICMB core after power-up
+    
+    //Write a byte 0x78 to a slave with address 0x22, residing on I2C bus #5.
+    
+    wb_bus.master_write(DPR_Reg, 8'h05);	// ID of Desired I2C Bus
+    
+    wb_bus.master_write(CMDR_Reg, 8'bxxxx_x110);	// Set Bus Command
+    wait(irq == 1);
+    wb_bus.master_read(CMDR_Reg, recv_data);
+    
+		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x100);	// Start Command
+		wait(irq == 1);
+		wb_bus.master_read(CMDR_Reg, recv_data);
 
-//	do begin
-//		wb_bus.master_read(CMDR_Reg, recv_data);
-//	end while(recv_data & 8'b1000_0000);	// wait until DON bit of CMDR reads '1'.
-	
-	wb_bus.master_write(CMDR_Reg, 8'bxxxx_x100);	// Start Command
+		wb_bus.master_write(DPR_Reg, 8'h44);
+		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x001);	// Write Command
+		wait(irq == 1);
+		wb_bus.master_read(CMDR_Reg, recv_data);
+		
+		wb_bus.master_write(DPR_Reg, 8'h78);	// Byte is written
+		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x001);	// Write Command
+		wait(irq == 1);
+		wb_bus.master_read(CMDR_Reg, recv_data);
 
-//	do begin
-//		wb_bus.master_read(CMDR_Reg, recv_data);
-//	end while(recv_data & 8'b1000_0000);	// wait until DON bit of CMDR reads '1'.
-	
-	wait(irq == 1);
-	wb_bus.master_read(CMDR_Reg, recv_data);
+		wb_bus.master_write(DPR_Reg, 8'h08);	// Byte is written
+		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x001);	// Write Command
+		wait(irq == 1);
+		wb_bus.master_read(CMDR_Reg, recv_data);
 
-	wb_bus.master_write(DPR_Reg, 8'h44);
-	
-	wb_bus.master_write(CMDR_Reg, 8'bxxxx_x001);	// Write Command	
-	
-	wb_bus.master_write(DPR_Reg, 8'h78);	// Byte is written
+		wb_bus.master_write(DPR_Reg, 8'h18);	// Byte is written
+		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x001);	// Write Command
+		wait(irq == 1);
+		wb_bus.master_read(CMDR_Reg, recv_data);
 
-	wb_bus.master_write(CMDR_Reg, 8'bxxxx_x001);	// Write Command
-
-//	do begin
-//		wb_bus.master_read(CMDR_Reg, recv_data);
-//	end while(recv_data & 8'b1000_0000);	// wait until DON bit of CMDR reads '1'.
-
-	wait(irq == 1);
-
-	wb_bus.master_write(CMDR_Reg, 8'bxxxx_x101);	// Stop Command
-
-//	do begin
-//		wb_bus.master_read(CMDR_Reg, recv_data);
-//	end while(recv_data & 8'b1000_0000);	// wait until DON bit of CMDR reads '1'.
-
-	wait(irq == 1);
+		wb_bus.master_write(CMDR_Reg, 8'bxxxx_x101);	// Stop Command
+		wait(irq == 1);
+		wb_bus.master_read(CMDR_Reg, recv_data);
 	
 end
 
