@@ -14,7 +14,7 @@ class i2c_driver extends ncsu_component#(.T(i2c_transaction_base));
   endfunction
 
   virtual task bl_put(T trans);
-    ncsu_info("i2c_driver::run()", {get_full_name(), "-", trans.convert2string()}, NCSU_NONE);
+    // ncsu_info("i2c_driver::run()", {get_full_name(), "-", trans.convert2string()}, NCSU_NONE);
    
     if(trans.op_sel == 1)
       bus.wait_for_i2c_transfer(trans.i2c_op, trans.i2c_data);

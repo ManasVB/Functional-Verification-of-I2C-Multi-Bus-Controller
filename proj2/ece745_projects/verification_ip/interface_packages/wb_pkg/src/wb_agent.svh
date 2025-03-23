@@ -3,7 +3,7 @@ class wb_agent extends ncsu_component#(.T(wb_transaction_base));
   wb_configuration configuration;
   wb_driver driver;
   wb_monitor monitor;
-  // wb_coverage cvg;
+
   ncsu_component #(T) subscribers[$];
   virtual wb_if#(.ADDR_WIDTH(WB_ADDR_WIDTH), .DATA_WIDTH(WB_DATA_WIDTH)) bus;
 
@@ -22,16 +22,10 @@ class wb_agent extends ncsu_component#(.T(wb_transaction_base));
     driver.set_configuration(configuration);
     driver.build();
     driver.bus = this.bus;
-    
-    // if(configuration.collect_coverage) begin
-    //   cvg = new("coverage", this);
-    //   cvg = set_configuration(configuration);
-    //   cvg.build();
-    //   connect_subscriber(cvg);
-    // end
 
     monitor = new("monitor", this);
     monitor.set_configuration(configuration);
+    monitor.set_parent(this);
     monitor.build();
     monitor.bus = this.bus;
 

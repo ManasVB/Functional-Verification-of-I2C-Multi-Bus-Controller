@@ -17,9 +17,6 @@ class environment extends ncsu_component;
 
   function void set_configuration(env_configuration cfg);
     configuration = cfg;
-
-    // wb_config = new(cfg.name);
-    // i2c_config = new(cfg.name);
   endfunction
 
   virtual function void build();
@@ -31,9 +28,9 @@ class environment extends ncsu_component;
     p1_agent.set_configuration(i2c_config);
     p1_agent.build();
 
-    // pred = new("pred",this);
-    // pred.set_configuration(configuration);
-    // pred.build();     
+    pred = new("pred",this);
+    pred.set_configuration(configuration);
+    pred.build();     
 
     // scbd = new("scbd",this);
     // scbd.set_configuration(configuration);
@@ -44,7 +41,7 @@ class environment extends ncsu_component;
     // coverage.build();
 
     // p0_agent.connect_subscriber(coverage);
-    // p0_agent.connect_subscriber(pred);
+    p0_agent.connect_subscriber(pred);
     // pred.set_scoreboard(scbd);
     // p1_agent.connect_subscriber(scbd);
 

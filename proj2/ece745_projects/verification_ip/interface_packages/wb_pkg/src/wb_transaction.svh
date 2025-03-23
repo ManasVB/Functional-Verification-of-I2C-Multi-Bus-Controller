@@ -13,10 +13,10 @@ class wb_transaction_base extends ncsu_transaction;
   endfunction
 
   virtual function string convert2string();
-      if(!op_sel)
-        return {super.convert2string(), $sformatf("Read Data: %p", wb_data)};
+      if(!wb_we)
+        return {super.convert2string(), $sformatf("Address: 0x%0h, Read Data: %x", wb_addr, wb_data)};
       else
-        return {super.convert2string(), $sformatf("Write Data: %p", wb_data)};
+        return {super.convert2string(), $sformatf("Address: 0x%0h, Write Data: %x", wb_addr, wb_data)};
   endfunction    
 
   function bit compare(wb_transaction_base rhs);

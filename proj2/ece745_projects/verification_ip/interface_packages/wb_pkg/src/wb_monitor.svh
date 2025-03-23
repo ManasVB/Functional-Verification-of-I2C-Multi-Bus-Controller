@@ -2,7 +2,7 @@ class wb_monitor extends ncsu_component#(.T(wb_transaction_base));
 
   wb_configuration configuration;
   virtual wb_if bus;
-  ncsu_component#(T) agent;
+  ncsu_component#(T) parent;
 
   T monitored_trans;
 
@@ -12,6 +12,10 @@ class wb_monitor extends ncsu_component#(.T(wb_transaction_base));
 
   function void set_configuration(wb_configuration cfg);
     configuration = cfg;
+  endfunction
+
+  function void set_parent(ncsu_component#(T) parent);
+      this.parent = parent;
   endfunction
 
   virtual task run();
@@ -28,7 +32,7 @@ class wb_monitor extends ncsu_component#(.T(wb_transaction_base));
                 monitored_trans.wb_data,
                 monitored_trans.wb_we),
                 NCSU_MEDIUM);
-      // agent.nb_put(monitored_trans);
+      parent.nb_put(monitored_trans);
     end
   endtask
 

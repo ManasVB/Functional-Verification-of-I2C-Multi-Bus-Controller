@@ -15,7 +15,7 @@ class wb_driver extends ncsu_component#(.T(wb_transaction_base));
   endfunction
 
   virtual task bl_put(T trans);
-    ncsu_info("wb_driver::run()", {get_full_name(), "-", trans.convert2string()}, NCSU_NONE);
+    // ncsu_info("wb_driver::run()", {get_full_name(), "-", trans.convert2string()}, NCSU_NONE);
 
     if(trans.op_sel)
       bus.master_write(trans.wb_addr, trans.wb_data);

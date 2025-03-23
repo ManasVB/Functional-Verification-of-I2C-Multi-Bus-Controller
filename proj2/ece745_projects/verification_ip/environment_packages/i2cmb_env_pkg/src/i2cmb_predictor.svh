@@ -19,7 +19,7 @@ class predictor extends ncsu_component#(.T(wb_transaction_base));
   virtual function void nb_put(T trans);
     ncsu_info("predictor::nb_put()", $sformatf({get_full_name(), " ", trans.convert2string()}),
               NCSU_MEDIUM);
-    scoreboard.nb_transport(trans, transport_trans);
+    // scoreboard.nb_transport(trans, transport_trans);
   endfunction
 
 endclass

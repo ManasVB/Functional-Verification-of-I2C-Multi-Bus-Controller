@@ -2,7 +2,7 @@ class i2c_monitor extends ncsu_component#(.T(i2c_transaction_base));
 
   i2c_configuration configuration;
   virtual i2c_if bus;
-  ncsu_component#(T) agent;
+  ncsu_component#(T) parent;
 
   T monitored_trans;
 
@@ -12,6 +12,10 @@ class i2c_monitor extends ncsu_component#(.T(i2c_transaction_base));
 
   function void set_configuration(i2c_configuration cfg);
     configuration = cfg;
+  endfunction
+
+  function void set_parent(ncsu_component#(T) parent);
+      this.parent = parent;
   endfunction
 
   virtual task run();
@@ -27,7 +31,7 @@ class i2c_monitor extends ncsu_component#(.T(i2c_transaction_base));
                 monitored_trans.i2c_op,
                 monitored_trans.i2c_data),
                 NCSU_MEDIUM);
-//      agent.nb_put(monitored_trans);
+    //  parent.nb_put(monitored_trans);
     end
   endtask
 
