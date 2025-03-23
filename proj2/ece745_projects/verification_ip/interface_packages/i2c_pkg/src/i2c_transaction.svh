@@ -14,9 +14,9 @@ class i2c_transaction_base extends ncsu_transaction;
 
   virtual function string convert2string();
       if(i2c_op == READ)
-        return {super.convert2string(), $sformatf("Read Data: %p", i2c_data)};
+        return {super.convert2string(), $sformatf("Address: 0x%0h, Read Data: %p", i2c_addr, i2c_data)};
       else
-        return {super.convert2string(), $sformatf("Write Data: %p", i2c_data)};
+        return {super.convert2string(), $sformatf("Address: 0x%0h, Write Data: %p", i2c_addr, i2c_data)};
   endfunction
   
   function bit compare(i2c_transaction_base rhs);

@@ -13,17 +13,13 @@ class scoreboard extends ncsu_component#(.T(i2c_transaction_base));
   T expected_trans;
 
   virtual function void nb_transport(input T input_trans, output T output_trans);
-    ncsu_info("scoreboard::nb_transport()", {"expected transaction ", input_trans.convert2string()}, NCSU_NONE);
+    ncsu_info("scoreboard::nb_transport()", {"Expected transaction ", input_trans.convert2string()}, NCSU_NONE);
     this.expected_trans = input_trans;
   endfunction
 
   virtual function void nb_put(T trans);
-    ncsu_info("scoreboard::nb_put()", {"expected transaction ", expected_trans.convert2string()}, NCSU_NONE);
-    ncsu_info("scoreboard::nb_put()", {"actual transaction ", trans.convert2string()}, NCSU_NONE);
-    if(this.expected_trans.compare(trans))
-      ncsu_info("scoreboard::nb_put()", $sformatf({get_full_name(), " ", trans.convert2string()}), NCSU_MEDIUM);
-    else
-      ncsu_info("scoreboard::nb_put()", $sformatf({get_full_name(), " ", trans.convert2string()}), NCSU_MEDIUM);  
+    ncsu_info("scoreboard::nb_put()", {"Predictor transaction ", expected_trans.convert2string()}, NCSU_NONE);
+    ncsu_info("scoreboard::nb_put()", {"I2C transaction ", trans.convert2string()}, NCSU_NONE);
   endfunction
 
 endclass

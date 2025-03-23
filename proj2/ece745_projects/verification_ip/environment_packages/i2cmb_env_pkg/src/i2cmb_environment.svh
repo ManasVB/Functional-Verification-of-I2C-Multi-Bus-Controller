@@ -32,9 +32,9 @@ class environment extends ncsu_component;
     pred.set_configuration(configuration);
     pred.build();     
 
-    // scbd = new("scbd",this);
-    // scbd.set_configuration(configuration);
-    // scbd.build();
+    scbd = new("scbd",this);
+    scbd.set_configuration(configuration);
+    scbd.build();
 
     cvg = new("coverage",this);
     cvg.set_configuration(configuration);
@@ -42,8 +42,8 @@ class environment extends ncsu_component;
 
     p0_agent.connect_subscriber(cvg);
     p0_agent.connect_subscriber(pred);
-    // pred.set_scoreboard(scbd);
-    // p1_agent.connect_subscriber(scbd);
+    pred.set_scoreboard(scbd);
+    p1_agent.connect_subscriber(scbd);
 
   endfunction
 

@@ -31,7 +31,7 @@ class i2c_monitor extends ncsu_component#(.T(i2c_transaction_base));
                 monitored_trans.i2c_op,
                 monitored_trans.i2c_data),
                 NCSU_MEDIUM);
-    //  parent.nb_put(monitored_trans);
+     parent.nb_put(monitored_trans);
     end
   endtask
 
