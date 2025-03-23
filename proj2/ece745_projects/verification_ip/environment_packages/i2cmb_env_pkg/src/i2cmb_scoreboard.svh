@@ -2,7 +2,7 @@ class scoreboard extends ncsu_component#(.T(i2c_transaction_base));
 
   env_configuration configuration;
 
-  function new(string name = "", ncsu_component #(T) parent = null);
+  function new(string name = "", ncsu_component_base parent = null);
     super.new(name, parent);
   endfunction
 

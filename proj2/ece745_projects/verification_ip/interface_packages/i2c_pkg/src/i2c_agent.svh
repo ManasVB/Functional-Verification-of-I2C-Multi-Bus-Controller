@@ -7,10 +7,14 @@ class i2c_agent extends ncsu_component#(.T(i2c_transaction_base));
   ncsu_component #(T) subscribers[$];
   virtual i2c_if bus;
 
-  function new(string name = "", ncsu_component #(T) parent = null);
+  function new(string name = "", ncsu_component_base parent = null);
     super.new(name,parent);
     if(!(ncsu_config_db#(virtual i2c_if #(.I2C_DATA_WIDTH(I2C_DATA_WIDTH), .I2C_ADDR_WIDTH(I2C_ADDR_WIDTH)))::get(get_full_name(),this.bus)))
       ncsu_fatal("i2c_agent::new()", $sformatf("ncsu_config_db::get() call fail %s", get_full_name()));
+  endfunction
+
+  function void set_configuration(i2c_configuration cfg);
+    configuration = cfg;
   endfunction
 
   virtual function void build();

@@ -5,12 +5,16 @@ class wb_agent extends ncsu_component#(.T(wb_transaction_base));
   wb_monitor monitor;
   // wb_coverage cvg;
   ncsu_component #(T) subscribers[$];
-  virtual wb_if bus;
+  virtual wb_if#(.ADDR_WIDTH(WB_ADDR_WIDTH), .DATA_WIDTH(WB_DATA_WIDTH)) bus;
 
-  function new(string name = "", ncsu_component #(T) parent = null);
+  function new(string name = "", ncsu_component_base parent = null);
     super.new(name,parent);
-    if(!(ncsu_config_db#(virtual wb_if #(.WB_ADDR_WIDTH(WB_ADDR_WIDTH), .WB_DATA_WIDTH(WB_DATA_WIDTH)))::get(get_full_name(),this.bus)))
+    if(!(ncsu_config_db#(virtual wb_if #(.ADDR_WIDTH(WB_ADDR_WIDTH), .DATA_WIDTH(WB_DATA_WIDTH)))::get(get_full_name(),this.bus)))
       ncsu_fatal("wb_agent::new()", $sformatf("ncsu_config_db::get() call fail %s", get_full_name()));
+  endfunction
+
+  function void set_configuration(wb_configuration cfg);
+    configuration = cfg;
   endfunction
 
   virtual function void build();

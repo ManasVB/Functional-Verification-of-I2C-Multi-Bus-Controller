@@ -6,7 +6,7 @@ interface i2c_if #(
 inout scl, inout triand sda
 );
 
-typedef enum bit {WRITE = 1'b0, READ = 1'b1} i2c_op_t;
+import i2c_pkg::*;
 
 bit start = 1'b0, stop = 1'b0;
 bit ack = 1'b1;

@@ -1,6 +1,6 @@
 interface wb_if       #(
-      int ADDR_WIDTH = 32,                                
-      int DATA_WIDTH = 16                                
+      int ADDR_WIDTH = 2,                                
+      int DATA_WIDTH = 8                                
       )
 (
   // System sigals
@@ -38,7 +38,7 @@ interface wb_if       #(
 
 // ****************************************************************************              
    task wait_for_interrupt();
-       @(posedge irq_i);
+       wait(irq_i == 1);
    endtask
 
 // ****************************************************************************              

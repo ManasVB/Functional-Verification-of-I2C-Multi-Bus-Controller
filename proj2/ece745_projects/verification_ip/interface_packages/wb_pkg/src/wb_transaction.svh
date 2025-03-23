@@ -6,13 +6,14 @@ class wb_transaction_base extends ncsu_transaction;
   bit [WB_ADDR_WIDTH-1:0] wb_addr;
   bit wb_we;
   bit wb_irq;
+  bit op_sel;
 
   function new(string name="");
     super.new(name);
   endfunction
 
   virtual function string convert2string();
-      if(!wb_we)
+      if(!op_sel)
         return {super.convert2string(), $sformatf("Read Data: %p", wb_data)};
       else
         return {super.convert2string(), $sformatf("Write Data: %p", wb_data)};

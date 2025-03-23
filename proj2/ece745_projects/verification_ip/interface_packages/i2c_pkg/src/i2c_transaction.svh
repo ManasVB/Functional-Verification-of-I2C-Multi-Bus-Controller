@@ -6,6 +6,7 @@ class i2c_transaction_base extends ncsu_transaction;
   bit [I2C_ADDR_WIDTH-1:0] i2c_addr;
   i2c_op_t i2c_op;
   bit complete;
+  bit op_sel;
 
   function new(string name="");
     super.new(name);
