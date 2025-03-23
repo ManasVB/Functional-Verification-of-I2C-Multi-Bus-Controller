@@ -9,7 +9,7 @@ class environment extends ncsu_component;
 
   predictor pred;
   scoreboard scbd;
-  // coverage coverage;
+  coverage_class cvg;
 
   function new(string name = "", ncsu_component_base parent = null);
     super.new(name, parent);
@@ -36,11 +36,11 @@ class environment extends ncsu_component;
     // scbd.set_configuration(configuration);
     // scbd.build();
 
-    // coverage = new("coverage",this);
-    // coverage.set_configuration(configuration.coverage_config);
-    // coverage.build();
+    cvg = new("coverage",this);
+    cvg.set_configuration(configuration);
+    cvg.build();
 
-    // p0_agent.connect_subscriber(coverage);
+    p0_agent.connect_subscriber(cvg);
     p0_agent.connect_subscriber(pred);
     // pred.set_scoreboard(scbd);
     // p1_agent.connect_subscriber(scbd);
