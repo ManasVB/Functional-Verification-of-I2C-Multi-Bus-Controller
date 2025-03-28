@@ -44,3 +44,16 @@ debug:
 run: compile_2
 	vsim  -batch -classdebug -msgmode both -l transcript -do "set NoQuitOnFinish 1; add wave -r *; log -r *; run -all; exit" optimized_debug_top_tb #-pli /mnt/apps/public/COE/synopsys_apps/verdi/S-2021.09-SP1/share/PLI/MODELSIM/LINUX/novas_fli.so
 
+convert_testplan:
+	xml2ucdb -format Excel ./i2cmb_test_plan.xml ./i2cmb_test_plan.ucdb
+	add testbrowser ./*.ucdb
+
+view_coverage:
+	vsim -viewcov ./i2cmb_test_plan.ucdb
+
+merge_coverage:
+	vcover merge -stats=none -strip 0 -totals sim_and_testplan_merged.ucdb ./*.ucdb 
+	coverage open ./sim_and_testplan_merged.ucdb
+
+report_coverage:
+	vcover report -details -html -htmldir covhtmlreport -assert -directive -cvg -code bcefst -threshL 50 -threshH 90 ./sim_and_testplan_merged.ucdb
