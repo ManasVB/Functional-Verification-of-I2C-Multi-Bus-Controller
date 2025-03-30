@@ -117,11 +117,16 @@ module top();
 			// ------------------------------------
 		);
 
+	property cmdr_irq_clear;
+		@(posedge clk) disable iff(rst) !rst ##1 !rst;
+	endproperty
+
 	property cmdr_res_bit;
 		@(posedge clk) disable iff(rst) !rst ##1 !rst;
 	endproperty
 
 	assert property (cmdr_res_bit) else $error ("ERROR");
+	assert property (cmdr_irq_clear) else $error ("ERROR");
 
 	/******* Project-2 Test Flow Starts *******/
 	test_base tst;
