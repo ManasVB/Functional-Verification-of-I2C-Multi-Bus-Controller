@@ -4,6 +4,42 @@ class coverage_class extends ncsu_component#(.T(wb_transaction_base));
   wb_transaction_base transport_trans;
   env_configuration configuration;
 
+  bit wb_operation, wb_addr_offset;
+  bit i2c_addr, i2c_op;
+  bit command, response;
+
+  covergroup DPR_Coverage;
+  	option.per_instance = 1;
+    option.name = get_full_name();
+  endgroup
+
+  covergroup CSR_Coverage;
+  	option.per_instance = 1;
+    option.name = get_full_name();
+  endgroup
+
+  covergroup env_coverage;
+  	option.per_instance = 1;
+    option.name = get_full_name();
+    wb_operation: coverpoint wb_operation;
+    wb_addr_offset: coverpoint wb_addr_offset;
+  endgroup
+
+  covergroup i2c_coverage;
+  	option.per_instance = 1;
+    option.name = get_full_name();
+    i2c_addr: coverpoint i2c_addr;
+    i2c_op: coverpoint i2c_op;
+    i2c_addr_x_op: cross i2c_addr, i2c_op;
+  endgroup
+
+  covergroup  wb_transaction_base_cg;
+  	option.per_instance = 1;
+    option.name = get_full_name();
+    command: coverpoint command;
+    response: coverpoint response;
+  endgroup
+
   function new(string name = "", ncsu_component_base parent = null);
     super.new(name, parent);
   endfunction
