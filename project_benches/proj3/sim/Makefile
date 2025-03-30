@@ -5,26 +5,28 @@ include $(ECE745_PROJECT_HOME)/verification_ip/interface_packages/i2c_pkg/Makefi
 include $(ECE745_PROJECT_HOME)/verification_ip/environment_packages/i2cmb_env_pkg/Makefile
 include $(ECE745_PROJECT_HOME)/verification_ip/ncsu_pkg/Makefile
 
+VLOG_OPT = -cover bcesf #+define+FSDB
+VSIM_OPT = -coverage -classdebug -msgmode both -l transcript #-pli /mnt/apps/public/COE/synopsys_apps/verdi/S-2021.09-SP1/share/PLI/MODELSIM/LINUX/novas_fli.so
+
 clean: 
-	rm -rf work *.wlf transcript qrun.out
+	rm -rf work *.wlf transcript qrun.out *.ucdb 
 
 comp_I2C_MB:
-	vcom ../rtl/iicmb_int_pkg.vhd
-	vcom ../rtl/iicmb_pkg.vhd
-	vcom ../rtl/mbyte.vhd
-	vcom ../rtl/mbit.vhd
-	vcom ../rtl/bus_state.vhd
-	vcom ../rtl/filter.vhd
-	vcom ../rtl/conditioner.vhd
-	vcom ../rtl/conditioner_mux.vhd
-	vcom ../rtl/iicmb_m.vhd
-	vcom ../rtl/regblock.vhd
-	vcom ../rtl/wishbone.vhd
-	vcom ../rtl/iicmb_m_wb.vhd
-
+	vcom -cover bces ../rtl/iicmb_int_pkg.vhd
+	vcom -cover bces ../rtl/iicmb_pkg.vhd
+	vcom -cover bces ../rtl/mbyte.vhd
+	vcom -cover bces ../rtl/mbit.vhd
+	vcom -cover bces ../rtl/bus_state.vhd
+	vcom -cover bces ../rtl/filter.vhd
+	vcom -cover bces ../rtl/conditioner.vhd
+	vcom -cover bces ../rtl/conditioner_mux.vhd
+	vcom -cover bces ../rtl/iicmb_m.vhd
+	vcom -cover bces ../rtl/regblock.vhd
+	vcom -cover bces ../rtl/wishbone.vhd
+	vcom -cover bces ../rtl/iicmb_m_wb.vhd
 
 comp_bench: comp_ncsu_pkg comp_wb_pkg comp_i2c_pkg comp_i2cmb_env_pkg
-	vlog ../testbench/top.sv
+	vlog $(VLOG_OPT)  ../testbench/top.sv
 
 optimize:
 	vopt +acc top -o optimized_debug_top_tb
@@ -34,7 +36,7 @@ compile: comp_I2C_MB comp_bench optimize
 compile_2: comp_bench optimize
 
 simulate:
-	vsim  -i -classdebug -msgmode both -do "set NoQuitOnFinish 1; do wave.do" optimized_debug_top_tb
+	vsim  -i -coverage -classdebug -msgmode both -do "set NoQuitOnFinish 1; do wave.do" optimized_debug_top_tb
 
 debug_3step: clean compile simulate
 
