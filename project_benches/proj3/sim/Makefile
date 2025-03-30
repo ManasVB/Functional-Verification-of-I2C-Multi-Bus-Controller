@@ -9,7 +9,7 @@ include $(ECE745_PROJECT_HOME)/verification_ip/environment_packages/i2cmb_env_pk
 include $(ECE745_PROJECT_HOME)/verification_ip/ncsu_pkg/Makefile
 
 clean: 
-	rm -rf work *.wlf transcript qrun.out *.ucdb
+	rm -rf work *.wlf transcript qrun.out covhtmlreport
 
 comp_I2C_MB:
 	vcom ../rtl/iicmb_int_pkg.vhd
@@ -25,6 +25,10 @@ comp_I2C_MB:
 	vcom ../rtl/wishbone.vhd
 	vcom ../rtl/iicmb_m_wb.vhd
 
+inc_test:	# This command creates .ucdb files for the 'tests' needed to link in the testplan
+	$(MAKE) run_cli GEN_TRANS_TYPE=i2cmb_register_test
+	$(MAKE) run_cli GEN_TRANS_TYPE=i2cmb_generator_compulsory_test
+	$(MAKE) run_cli GEN_TRANS_TYPE=i2cmb_dut_functionality_test
 
 comp_bench: comp_ncsu_pkg comp_wb_pkg comp_i2c_pkg comp_i2cmb_env_pkg
 	vlog ../testbench/top.sv
