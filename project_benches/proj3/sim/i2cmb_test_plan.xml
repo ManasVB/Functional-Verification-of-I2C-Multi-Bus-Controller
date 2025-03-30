@@ -206,13 +206,88 @@
    <Interior/>
    <NumberFormat/>
   </Style>
+  <Style ss:ID="s81">
+   <Alignment ss:Vertical="Top" ss:WrapText="1"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#000000"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#000000"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#000000"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#000000"/>
+   </Borders>
+   <Interior ss:Color="#C0C0C0" ss:Pattern="Solid"/>
+   <NumberFormat ss:Format="@"/>
+  </Style>
+  <Style ss:ID="s82">
+   <Alignment ss:Vertical="Top" ss:WrapText="1"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#000000"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#000000"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#000000"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#000000"/>
+   </Borders>
+  </Style>
+  <Style ss:ID="s83">
+   <Alignment ss:Vertical="Top" ss:WrapText="1"/>
+   <Borders>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#000000"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#000000"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#000000"/>
+   </Borders>
+  </Style>
+  <Style ss:ID="s84">
+   <Alignment ss:Vertical="Top" ss:WrapText="1"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#000000"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#000000"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#000000"/>
+   </Borders>
+   <Interior ss:Color="#BFBFBF" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s85">
+   <Alignment ss:Vertical="Top" ss:WrapText="1"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#000000"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#000000"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#000000"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"
+     ss:Color="#000000"/>
+   </Borders>
+   <Interior ss:Color="#C0C0C0" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="s86">
+   <Alignment ss:Vertical="Top" ss:WrapText="1"/>
+   <Borders>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/>
+   </Borders>
+   <Font ss:FontName="Arial"/>
+   <Interior ss:Color="#C0C0C0" ss:Pattern="Solid"/>
+   <NumberFormat/>
+  </Style>
  </Styles>
  <Worksheet ss:Name="AHB to WB Bridge Test Plan">
-  <Table ss:ExpandedColumnCount="10" ss:ExpandedRowCount="51" x:FullColumns="1"
+  <Table ss:ExpandedColumnCount="10" ss:ExpandedRowCount="53" x:FullColumns="1"
    x:FullRows="1" ss:DefaultColumnWidth="52.8" ss:DefaultRowHeight="12">
    <Column ss:StyleID="s62" ss:AutoFitWidth="0" ss:Width="67.8"/>
    <Column ss:AutoFitWidth="0" ss:Width="132"/>
-   <Column ss:Width="253.2"/>
+   <Column ss:Width="274.8"/>
    <Column ss:AutoFitWidth="0" ss:Width="238.2"/>
    <Column ss:AutoFitWidth="0" ss:Width="81"/>
    <Column ss:AutoFitWidth="0" ss:Width="61.8"/>
@@ -354,12 +429,24 @@
     <Cell ss:StyleID="s74"><Data ss:Type="String">NCSU</Data></Cell>
     <Cell ss:StyleID="s74"><Data ss:Type="Number">1</Data></Cell>
    </Row>
-   <Row ss:AutoFitHeight="0" ss:Height="13.049999999999999">
+   <Row ss:AutoFitHeight="0" ss:Height="25.049999999999997">
     <Cell ss:StyleID="s71"><Data ss:Type="String">2.3</Data></Cell>
-    <Cell ss:StyleID="s72"><Data ss:Type="String">Response to Commands</Data></Cell>
-    <Cell ss:StyleID="s72"><Data ss:Type="String">Ensure DUT provides valid response to byte-level commands</Data></Cell>
-    <Cell ss:StyleID="s72"><Data ss:Type="String">wb_transaction_base_cg::resp_x_commands</Data></Cell>
-    <Cell ss:StyleID="s72"><Data ss:Type="String">Cross</Data></Cell>
+    <Cell ss:StyleID="s72"><Data ss:Type="String">Command Covr</Data></Cell>
+    <Cell ss:StyleID="s72"><Data ss:Type="String">Check if DUT receives every possible byte-level command</Data></Cell>
+    <Cell ss:StyleID="s72"><Data ss:Type="String">wb_transaction_base_cg::command</Data></Cell>
+    <Cell ss:StyleID="s72"><Data ss:Type="String">Coverpoint</Data></Cell>
+    <Cell ss:StyleID="s73"><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:StyleID="s73"><Data ss:Type="Number">100</Data></Cell>
+    <Cell ss:StyleID="s74"><Data ss:Type="String">mbuzruk</Data></Cell>
+    <Cell ss:StyleID="s74"><Data ss:Type="String">NCSU</Data></Cell>
+    <Cell ss:StyleID="s74"><Data ss:Type="Number">1</Data></Cell>
+   </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="25.049999999999997">
+    <Cell ss:StyleID="s71"><Data ss:Type="String">2.4</Data></Cell>
+    <Cell ss:StyleID="s72"><Data ss:Type="String">Response Covr</Data></Cell>
+    <Cell ss:StyleID="s72"><Data ss:Type="String">Check if DUT receives every possible response</Data></Cell>
+    <Cell ss:StyleID="s72"><Data ss:Type="String">wb_transaction_base_cg::response</Data></Cell>
+    <Cell ss:StyleID="s72"><Data ss:Type="String">Coverpoint</Data></Cell>
     <Cell ss:StyleID="s73"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s73"><Data ss:Type="Number">100</Data></Cell>
     <Cell ss:StyleID="s74"><Data ss:Type="String">mbuzruk</Data></Cell>
@@ -367,10 +454,10 @@
     <Cell ss:StyleID="s74"><Data ss:Type="Number">1</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="13.049999999999999">
-    <Cell ss:StyleID="s71"><Data ss:Type="String">2.4</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">2.5</Data></Cell>
     <Cell ss:StyleID="s72"><Data ss:Type="String">CSR Bus ID Test</Data></Cell>
     <Cell ss:StyleID="s72"><Data ss:Type="String">Check if BUS ID field in CSR matches selected BUS ID </Data></Cell>
-    <Cell ss:StyleID="s75"><Data ss:Type="String">i2cmb_dut_functionality</Data></Cell>
+    <Cell ss:StyleID="s75"><Data ss:Type="String">i2cmb_dut_functionality_test</Data></Cell>
     <Cell ss:StyleID="s72"><Data ss:Type="String">test</Data></Cell>
     <Cell ss:StyleID="s73"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s73"><Data ss:Type="Number">100</Data></Cell>
@@ -379,7 +466,7 @@
     <Cell ss:StyleID="s74"><Data ss:Type="Number">1</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="13.2">
-    <Cell ss:StyleID="s71"><Data ss:Type="String">2.5</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">2.6</Data></Cell>
     <Cell ss:StyleID="s72"><Data ss:Type="String">DPR Register Value</Data></Cell>
     <Cell ss:StyleID="s72"><Data ss:Type="String">Check if user can write different values to DPR</Data></Cell>
     <Cell ss:StyleID="s75"><Data ss:Type="String">DPR_Coverage</Data></Cell>
@@ -391,7 +478,7 @@
     <Cell ss:StyleID="s74"><Data ss:Type="Number">1</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="13.2">
-    <Cell ss:StyleID="s71"><Data ss:Type="String">2.6</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">2.7</Data></Cell>
     <Cell ss:StyleID="s75"><Data ss:Type="String">CSR Register functionality</Data></Cell>
     <Cell ss:StyleID="s75"><Data ss:Type="String">Checking if all the CSR bits are functional</Data></Cell>
     <Cell ss:StyleID="s75"><Data ss:Type="String">CSR_Coverage</Data></Cell>
@@ -403,10 +490,10 @@
     <Cell ss:StyleID="s74"><Data ss:Type="Number">1</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="13.2">
-    <Cell ss:StyleID="s71"><Data ss:Type="String">2.7</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">2.8</Data></Cell>
     <Cell ss:StyleID="s75"><Data ss:Type="String">Acknowledge detection</Data></Cell>
     <Cell ss:StyleID="s75"><Data ss:Type="String">Check if DUT is detecting ack during write operation</Data></Cell>
-    <Cell ss:StyleID="s75"><Data ss:Type="String">i2cmb_dut_functionality</Data></Cell>
+    <Cell ss:StyleID="s75"><Data ss:Type="String">i2cmb_dut_functionality_test</Data></Cell>
     <Cell ss:StyleID="s72"><Data ss:Type="String">test</Data></Cell>
     <Cell ss:StyleID="s73"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s73"><Data ss:Type="Number">100</Data></Cell>
@@ -450,11 +537,23 @@
     <Cell ss:StyleID="s74"><Data ss:Type="String">NCSU</Data></Cell>
     <Cell ss:StyleID="s74"><Data ss:Type="Number">1</Data></Cell>
    </Row>
+   <Row ss:AutoFitHeight="0" ss:Height="15.45">
+    <Cell ss:StyleID="s81"><Data ss:Type="String">3.3</Data></Cell>
+    <Cell ss:StyleID="s82"><Data ss:Type="String">I2C Operation type</Data></Cell>
+    <Cell ss:StyleID="s82"><Data ss:Type="String">Ensuring if the read and write operations are properly done</Data></Cell>
+    <Cell ss:StyleID="s82"><Data ss:Type="String">i2c_coverage::i2c_op</Data></Cell>
+    <Cell ss:StyleID="s82"><Data ss:Type="String">Coverpoint</Data></Cell>
+    <Cell ss:StyleID="s83"><Data ss:Type="Number">1</Data></Cell>
+    <Cell ss:StyleID="s82"><Data ss:Type="Number">100</Data></Cell>
+    <Cell ss:StyleID="s84"><Data ss:Type="String">mbuzruk</Data></Cell>
+    <Cell ss:StyleID="s85"><Data ss:Type="String">NCSU</Data></Cell>
+    <Cell ss:StyleID="s86"><Data ss:Type="Number">1</Data></Cell>
+   </Row>
    <Row ss:AutoFitHeight="0" ss:Height="13.2">
-    <Cell ss:StyleID="s71"><Data ss:Type="String">3.3</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">3.4</Data></Cell>
     <Cell ss:StyleID="s72"><Data ss:Type="String">I2C Operations</Data></Cell>
     <Cell ss:StyleID="s72"><Data ss:Type="String">Check if operation to slave is valid</Data></Cell>
-    <Cell ss:StyleID="s75"><Data ss:Type="String">i2c_coverage::i2c_addrOp</Data></Cell>
+    <Cell ss:StyleID="s75"><Data ss:Type="String">i2c_coverage::i2c_addr_x_op</Data></Cell>
     <Cell ss:StyleID="s75"><Data ss:Type="String">Cross</Data></Cell>
     <Cell ss:StyleID="s73"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s73"><Data ss:Type="Number">100</Data></Cell>
@@ -463,7 +562,7 @@
     <Cell ss:StyleID="s74"><Data ss:Type="Number">1</Data></Cell>
    </Row>
    <Row ss:AutoFitHeight="0" ss:Height="13.2">
-    <Cell ss:StyleID="s71"><Data ss:Type="String">3.4</Data></Cell>
+    <Cell ss:StyleID="s71"><Data ss:Type="String">3.5</Data></Cell>
     <Cell ss:StyleID="s75"><Data ss:Type="String">Register address</Data></Cell>
     <Cell ss:StyleID="s75"><Data ss:Type="String">Checking if all the registers addresses are accesssed </Data></Cell>
     <Cell ss:StyleID="s75"><Data ss:Type="String">env_coverage::wb_addr_offset</Data></Cell>
@@ -490,7 +589,7 @@
     <Cell ss:StyleID="s71"><Data ss:Type="String">4.1</Data></Cell>
     <Cell ss:StyleID="s72"><Data ss:Type="String">Consecutive Writes</Data></Cell>
     <Cell ss:StyleID="s72"><Data ss:Type="String">Perform 32 consecutive writes, from 0 to 31</Data></Cell>
-    <Cell ss:StyleID="s72"><Data ss:Type="String">i2cmb_generator_writes</Data></Cell>
+    <Cell ss:StyleID="s72"><Data ss:Type="String">i2cmb_generator_compulsory_test</Data></Cell>
     <Cell ss:StyleID="s72"><Data ss:Type="String">test</Data></Cell>
     <Cell ss:StyleID="s73"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s73"><Data ss:Type="Number">100</Data></Cell>
@@ -502,7 +601,7 @@
     <Cell ss:StyleID="s71"><Data ss:Type="String">4.2</Data></Cell>
     <Cell ss:StyleID="s72"><Data ss:Type="String">Consecutive Reads</Data></Cell>
     <Cell ss:StyleID="s72"><Data ss:Type="String">Perform 32 consecutive reads, from 100 to 131</Data></Cell>
-    <Cell ss:StyleID="s72"><Data ss:Type="String">i2cmb_generator_reads</Data></Cell>
+    <Cell ss:StyleID="s72"><Data ss:Type="String">i2cmb_generator_compulsory_test</Data></Cell>
     <Cell ss:StyleID="s72"><Data ss:Type="String">test</Data></Cell>
     <Cell ss:StyleID="s73"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s73"><Data ss:Type="Number">100</Data></Cell>
@@ -514,7 +613,7 @@
     <Cell ss:StyleID="s71"><Data ss:Type="String">4.3</Data></Cell>
     <Cell ss:StyleID="s72"><Data ss:Type="String">Alternating Reads/Writes</Data></Cell>
     <Cell ss:StyleID="s72"><Data ss:Type="String">Perform alternating writes and reads for 64 transfers</Data></Cell>
-    <Cell ss:StyleID="s72"><Data ss:Type="String">i2cmb_generator_alternate</Data></Cell>
+    <Cell ss:StyleID="s72"><Data ss:Type="String">i2cmb_generator_compulsory_test</Data></Cell>
     <Cell ss:StyleID="s72"><Data ss:Type="String">test</Data></Cell>
     <Cell ss:StyleID="s73"><Data ss:Type="Number">1</Data></Cell>
     <Cell ss:StyleID="s73"><Data ss:Type="Number">100</Data></Cell>
@@ -631,8 +730,8 @@
    <Panes>
     <Pane>
      <Number>3</Number>
-     <ActiveRow>15</ActiveRow>
-     <ActiveCol>3</ActiveCol>
+     <ActiveRow>22</ActiveRow>
+     <ActiveCol>2</ActiveCol>
     </Pane>
    </Panes>
    <ProtectObjects>False</ProtectObjects>
