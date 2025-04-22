@@ -24,17 +24,6 @@ interface wb_if       #(
   input wire [DATA_WIDTH-1:0] dat_i
   );
 
-   property cmdr_irq_clear;
-   @(posedge clk_i) 1'b1;
-   endproperty
-
-   property cmdr_res_bit;
-   @(posedge clk_i) 1'b1;
-   endproperty
-
-   assert property(cmdr_irq_clear) else $error("Invalid cmdr_irq_clear operation for wb Protocol");
-   assert property(cmdr_res_bit) else $error("Invalid cmdr_res_bit operation for wb Protocol");
-
   initial reset_bus();
 
 // ****************************************************************************              

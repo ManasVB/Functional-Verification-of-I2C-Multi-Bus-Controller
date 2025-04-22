@@ -117,7 +117,27 @@ module top();
 			// ------------------------------------
 		);
 
-	/******* Project-2 Test Flow Starts *******/
+		i2cmb_assertions #(
+			.ADDR_WIDTH(WB_ADDR_WIDTH),
+			.DATA_WIDTH(WB_DATA_WIDTH)  
+		)
+		check_bus (
+			// System sigals
+			.clk_i(clk),
+			.rst_i(rst),
+			.irq_i(irq),
+			// Master signals
+			.cyc_o(cyc),
+			.stb_o(stb),
+			.ack_i(ack),
+			.adr_o(adr),
+			.we_o(we),
+			// Shred signals
+			.dat_o(dat_wr_o),
+			.dat_i(dat_rd_i)
+		);
+
+	/******* Project Test Flow Starts *******/
 	test_base tst;
 
 	initial begin : test_flow
