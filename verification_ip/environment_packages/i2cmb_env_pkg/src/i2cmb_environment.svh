@@ -10,7 +10,7 @@ class environment extends ncsu_component;
   predictor pred;
   scoreboard scbd;
   coverage_class cvg;
-  // i2cmb_wb_coverage cvg0;
+  i2cmb_wb_coverage cvg0;
   i2cmb_i2c_coverage cvg1;
 
   function new(string name = "", ncsu_component_base parent = null);
@@ -42,9 +42,9 @@ class environment extends ncsu_component;
     cvg.set_configuration(configuration);
     cvg.build();
   
-    // cvg0 = new("wb_coverage",this);
-    // cvg0.set_configuration(configuration);
-    // cvg0.build();
+    cvg0 = new("wb_coverage",this);
+    cvg0.set_configuration(configuration);
+    cvg0.build();
 
     cvg1 = new("i2c_coverage",this);
     cvg1.set_configuration(configuration);
@@ -55,7 +55,7 @@ class environment extends ncsu_component;
     pred.set_scoreboard(scbd);
     p1_agent.connect_subscriber(scbd);
     p1_agent.connect_subscriber(cvg1);
-    // p0_agent.connect_subscriber(cvg0);
+    p0_agent.connect_subscriber(cvg0);
 
   endfunction
 
