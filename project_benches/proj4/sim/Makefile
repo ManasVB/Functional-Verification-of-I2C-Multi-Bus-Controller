@@ -9,7 +9,7 @@ include $(ECE745_PROJECT_HOME)/verification_ip/environment_packages/i2cmb_env_pk
 include $(ECE745_PROJECT_HOME)/verification_ip/ncsu_pkg/Makefile
 
 clean: 
-	rm -rf work *.wlf transcript qrun.out covhtmlreport
+	rm -rf work *.wlf transcript qrun.out covhtmlreport *.ucdb
 
 comp_I2C_MB:
 	vcom ../rtl/iicmb_int_pkg.vhd
