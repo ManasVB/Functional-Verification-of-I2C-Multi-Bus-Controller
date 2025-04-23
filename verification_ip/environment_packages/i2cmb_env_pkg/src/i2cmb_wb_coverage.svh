@@ -14,7 +14,7 @@ class i2cmb_wb_coverage extends ncsu_component #(.T(wb_transaction_base));
 
   covergroup env_coverage @(sample_wb);
     wb_addr_offset: coverpoint wb_addr { option.auto_bin_max = 1; } 	// c1.auto[CSR],c1.auto[DPR],c1.auto[CMDR],c1.auto[FSMR]
-    wb_operation: coverpoint wb_op; 		// c2.auto[WB_READ],c2.auto[WB_WRITE]
+    wb_operation: coverpoint wb_op { option.auto_bin_max = 1; } 		// c2.auto[WB_READ],c2.auto[WB_WRITE]
   endgroup  
 
   covergroup wb_transaction_base_cg with function sample (wb_op_t op, cmd_t cmd, rsp_t rsp);
@@ -38,17 +38,17 @@ class i2cmb_wb_coverage extends ncsu_component #(.T(wb_transaction_base));
   endfunction
 
   virtual function void nb_put(T trans);
-        cmdr_u cmdr;
-        cmd_t cmd;
-        rsp_t rsp;
-        wb_op_t op;
-        cmdr.value = trans.wb_data;
-        cmd = cmdr.fields.cmd;
-        rsp = rsp_t'({cmdr.fields.don, cmdr.fields.nak, cmdr.fields.al, cmdr.fields.err});
-        op = wb_op_t'(trans.wb_we);
-        wb_transaction_base_cg.sample(op, cmd, rsp);
+    cmdr_u cmdr;
+    cmd_t cmd;
+    rsp_t rsp;
+    wb_op_t op;
+    cmdr.value = trans.wb_data;
+    cmd = cmdr.fields.cmd;
+    rsp = rsp_t'({cmdr.fields.don, cmdr.fields.nak, cmdr.fields.al, cmdr.fields.err});
+    op = wb_op_t'(trans.wb_we);
+    wb_transaction_base_cg.sample(op, cmd, rsp);
 
-        ->>sample_wb;
+    ->>sample_wb;
   endfunction
 
 endclass
