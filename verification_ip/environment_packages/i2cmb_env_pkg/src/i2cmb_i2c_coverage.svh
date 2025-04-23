@@ -26,9 +26,8 @@ class i2cmb_i2c_coverage extends ncsu_component #(.T(i2c_transaction_base));
 
   virtual function void nb_put(T trans);
 
-    // $cast(i2c_op ,trans.get_op());
-    // i2c_addr = trans.get_addr();
-
+    $cast(i2c_op ,trans.get_op());
+    
     ->>i2c_covr;
 
   endfunction  
