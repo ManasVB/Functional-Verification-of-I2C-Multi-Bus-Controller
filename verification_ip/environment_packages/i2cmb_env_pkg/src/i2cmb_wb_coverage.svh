@@ -4,7 +4,8 @@ class i2cmb_wb_coverage extends ncsu_component #(.T(wb_transaction_base));
   cmd_t iicmb_cmd;
   wb_op_t wb_op;
   bit [WB_DATA_WIDTH-1:0] wb_data;
-  event wb_covr, sample_DPR;
+  event wb_covr, sample_DPR, sample_CSR;
+  CSR_REG csr_reg;
 
   env_configuration configuration;
 
@@ -36,14 +37,25 @@ class i2cmb_wb_coverage extends ncsu_component #(.T(wb_transaction_base));
     DPR_Data_Value: coverpoint wb_data { option.auto_bin_max = 1; }
   endgroup
 
+  covergroup CSR_coverage @(sample_CSR);
+    CSR_Enable_bit: coverpoint csr_reg.e;
+    CSR_Interrupt_Enable_bit: coverpoint csr_reg.ie;
+    CSR_Bus_Busy_bit: coverpoint csr_reg.bb;
+    CSR_Bus_Captured_bit: coverpoint csr_reg.bc;
+    CSR_Bus_ID_bits: coverpoint csr_reg.bus_id { option.auto_bin_max = 4; }
+  endgroup
+
   function new(string name= "", ncsu_component_base parent = null);
     super.new(name, parent);
     env_coverage = new;
     wb_transaction_base_cg = new;
     DPR_coverage = new;
+    CSR_coverage = new;
   endfunction
 
   virtual function void nb_put(T trans);
+
+    // $cast( wb_addr, trans.wb_addr);
     cmdr_u cmdr;
     cmd_t cmd;
     rsp_t rsp;
@@ -53,7 +65,8 @@ class i2cmb_wb_coverage extends ncsu_component #(.T(wb_transaction_base));
     rsp = rsp_t'({cmdr.fields.don, cmdr.fields.nak, cmdr.fields.al, cmdr.fields.err});
     op = wb_op_t'(trans.wb_we);
     wb_transaction_base_cg.sample(op, cmd, rsp);
-    if(trans.wb_addr==DPR_ADDR) ->>sample_DPR;
+    if(wb_addr==DPR_ADDR) ->>sample_DPR;
+    if(wb_addr==CSR_ADDR)	->>sample_CSR;
 
     ->>wb_covr;
   endfunction

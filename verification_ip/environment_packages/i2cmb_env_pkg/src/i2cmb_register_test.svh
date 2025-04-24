@@ -1,4 +1,5 @@
-class i2cmb_register_test extends ncsu_component;
+class i2cmb_register_test extends generator;
+    `ncsu_register_object(i2cmb_register_test)
 
   wb_transaction_base trans_w[addr_t], trans_r[addr_t];
   wb_agent wb_agt0;

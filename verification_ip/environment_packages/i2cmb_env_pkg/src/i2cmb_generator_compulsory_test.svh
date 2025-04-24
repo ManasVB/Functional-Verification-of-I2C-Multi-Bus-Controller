@@ -1,4 +1,5 @@
-class i2cmb_generator_compulsory_test extends ncsu_component;
+class i2cmb_generator_compulsory_test extends generator;
+  `ncsu_register_object(i2cmb_generator_compulsory_test)
 
   wb_transaction_base wb_trans;
   i2c_transaction_base i2c_trans;

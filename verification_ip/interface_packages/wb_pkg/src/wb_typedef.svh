@@ -57,3 +57,22 @@ string  map_reg_ofst_name [ addr_t ] = '{
     CMDR_ADDR            :   "CMDR",
     FSMR_ADDR            :   "FSMR"
 };
+
+typedef struct{
+    bit e;
+    bit ie;
+    bit bb;
+    bit bc;
+    bit [3:0] bus_id;
+} CSR_REG;
+
+typedef enum bit [3:0] {      
+    S_IDLE,             // Idle
+    S_BUS_TAKEN,        // Bus is taken
+    S_START_PENDING,    // Waiting for right moment to capture bus
+    S_START,            // Sending Start condition (Capturing the bus)
+    S_STOP,             // Sending Stop condition (Releasing the bus)
+    S_WRITE_BYTE,       // Sending a byte
+    S_READ_BYTE,        // Receiving a byte
+    S_WAIT              // Receiving a byte
+} byte_fsm_state_t;
