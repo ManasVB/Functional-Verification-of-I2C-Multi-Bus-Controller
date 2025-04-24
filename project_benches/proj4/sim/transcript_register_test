@@ -1,5 +1,5 @@
-# vsim -c -coverage -sv_seed 12345 -do "set NoQuitOnFinish 1; run -a; coverage attribute -name TESTNAME -value i2cmb_register_test; coverage save i2cmb_register_test.12345.ucdb; quit -f" "+GEN_TRANS_TYPE=i2cmb_register_test" optimized_debug_top_tb 
-# Start time: 17:09:01 on Apr 24,2025
+# vsim -c -coverage -sv_seed random -do "set NoQuitOnFinish 1; run -a; coverage attribute -name TESTNAME -value i2cmb_register_test; coverage save i2cmb_register_test.random.ucdb; quit -f" "+GEN_TRANS_TYPE=i2cmb_register_test" optimized_debug_top_tb 
+# Start time: 17:19:58 on Apr 24,2025
 # //  Questa Sim-64
 # //  Version 2025.1_1 linux_x86_64 Feb 13 2025
 # //
@@ -44,6 +44,7 @@
 # Loading work.bus_state(rtl)#1
 # ** Warning: (vsim-8386) Illegal assignment to type 'enum bit i2c_pkg::i2c_op_t' from type 'wire': An enum variable may only be assigned the same enum typed variable or one of its values.
 #    Time: 0 ps  Iteration: 0  Instance: /top/i2c_bus File: /mnt/ncsudrive/m/mbuzruk/745/745_project/project_benches/proj4/sim/../../../verification_ip/interface_packages/i2c_pkg/src/i2c_if.sv Line: 64
+# Sv_Seed = 1475716788
 # set NoQuitOnFinish 1
 # 1
 #  run -a
@@ -173,7 +174,7 @@
 # Break in Task i2cmb_env_pkg/i2cmb_register_test::run at /mnt/ncsudrive/m/mbuzruk/745/745_project/project_benches/proj4/sim/../../../verification_ip/environment_packages/i2cmb_env_pkg/src/i2cmb_register_test.svh line 170
 # Stopped at /mnt/ncsudrive/m/mbuzruk/745/745_project/project_benches/proj4/sim/../../../verification_ip/environment_packages/i2cmb_env_pkg/src/i2cmb_register_test.svh line 170
 #  coverage attribute -name TESTNAME -value i2cmb_register_test
-#  coverage save i2cmb_register_test.12345.ucdb
+#  coverage save i2cmb_register_test.random.ucdb
 #  quit -f
-# End time: 17:09:02 on Apr 24,2025, Elapsed time: 0:00:01
+# End time: 17:19:59 on Apr 24,2025, Elapsed time: 0:00:01
 # Errors: 0, Warnings: 1

@@ -1,5 +1,5 @@
 GEN_TRANS_TYPE ?= i2cmb_transaction
-TEST_SEED ?= 12345
+TEST_SEED ?= random
 
 export ECE745_PROJECT_HOME ?= $(PWD)/../../..
 
