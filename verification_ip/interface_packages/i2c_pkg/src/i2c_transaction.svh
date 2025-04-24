@@ -24,5 +24,13 @@ class i2c_transaction_base extends ncsu_transaction;
 	            (this.i2c_addr == rhs.i2c_addr) &&
               (this.i2c_data == rhs.i2c_data));
   endfunction
-  
+
+	virtual function bit [I2C_ADDR_WIDTH-1:0] get_addr();
+	      return {this.i2c_addr};
+	endfunction
+
+	virtual function bit get_op();
+	      return this.i2c_op;
+	endfunction
+
 endclass

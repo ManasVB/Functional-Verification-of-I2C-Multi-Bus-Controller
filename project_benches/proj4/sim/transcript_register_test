@@ -1,0 +1,180 @@
+# vsim -c -coverage -sv_seed random -do "set NoQuitOnFinish 1; run -a; coverage attribute -name TESTNAME -value i2cmb_register_test; coverage save i2cmb_register_test.random.ucdb; quit -f" "+GEN_TRANS_TYPE=i2cmb_register_test" optimized_debug_top_tb 
+# Start time: 17:19:58 on Apr 24,2025
+# //  Questa Sim-64
+# //  Version 2025.1_1 linux_x86_64 Feb 13 2025
+# //
+# // Unpublished work. Copyright 2025 Siemens
+# //
+# // This material contains trade secrets or otherwise confidential information
+# // owned by Siemens Industry Software Inc. or its affiliates (collectively,
+# // "SISW"), or its licensors. Access to and use of this information is strictly
+# // limited as set forth in the Customer's applicable agreements with SISW.
+# //
+# // This material may not be copied, distributed, or otherwise disclosed outside
+# // of the Customer's facilities without the express written permission of SISW,
+# // and may not be used in any way not expressly authorized by SISW.
+# //
+# Loading sv_std.std
+# Loading work.wb_if(fast)
+# Loading work.i2c_if(fast)
+# Loading work.ncsu_pkg(fast)
+# Loading work.wb_pkg(fast)
+# Loading work.i2c_pkg(fast)
+# Loading work.i2cmb_env_pkg(fast)
+# Loading work.top(fast)
+# Loading work.i2c_if(fast__2)
+# Loading work.wb_if(fast__2)
+# Loading work.i2cmb_assertions_sv_unit(fast)
+# Loading work.i2cmb_assertions(fast__1)
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading work.iicmb_m_wb(str)#1
+# Loading work.wishbone(rtl)#1
+# Loading ieee.numeric_std(body)
+# Loading work.iicmb_pkg(body)
+# Loading work.regblock(rtl)#1
+# Loading work.iicmb_int_pkg(body)
+# Loading work.iicmb_m(str)#1
+# Loading work.mbyte(rtl)#1
+# Loading work.mbit(rtl)#1
+# Loading work.conditioner_mux(str)#1
+# Loading work.conditioner(str)#1
+# Loading work.filter(rtl)#1
+# Loading work.bus_state(rtl)#1
+# ** Warning: (vsim-8386) Illegal assignment to type 'enum bit i2c_pkg::i2c_op_t' from type 'wire': An enum variable may only be assigned the same enum typed variable or one of its values.
+#    Time: 0 ps  Iteration: 0  Instance: /top/i2c_bus File: /mnt/ncsudrive/m/mbuzruk/745/745_project/project_benches/proj4/sim/../../../verification_ip/interface_packages/i2c_pkg/src/i2c_if.sv Line: 64
+# Sv_Seed = 1475716788
+# set NoQuitOnFinish 1
+# 1
+#  run -a
+# ----------------------------------------------------------------
+# //  NCSU Package 
+# //  Version 1.0a
+# ----------------------------------------------------------------
+# 
+# 
+# RUNNING TESTCASE: i2cmb_register_test
+# NCSU_INFO:Time                    0:ncsu_component::build():  of tst.env.p0_agent.driver called
+# NCSU_INFO:Time                    0:ncsu_component::build():  of tst.env.p0_agent.monitor called
+# NCSU_INFO:Time                    0:ncsu_component::build():  of tst.env.p1_agent.driver called
+# NCSU_INFO:Time                    0:ncsu_component::build():  of tst.env.p1_agent.monitor called
+# NCSU_INFO:Time                    0:ncsu_component::build():  of tst.env.pred called
+# NCSU_INFO:Time                    0:ncsu_component::build():  of tst.env.scbd called
+# NCSU_INFO:Time                    0:ncsu_component::build():  of tst.env.coverage called
+# NCSU_INFO:Time                    0:ncsu_component::build():  of tst.env.wb_coverage called
+# NCSU_INFO:Time                    0:ncsu_component::build():  of tst.env.i2c_coverage called
+# ************TESTPLAN 1.1: Register Address Valid Start *************
+# ************TESTPLAN 1.1: Register Address Valid Done *************
+# ************TESTPLAN 1.2: Register or Field Aliasing Start *************
+# NCSU_INFO:Time                14500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x0, Data: c0, Write Enable: 1
+# NCSU_INFO:Time                14500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 11 Address: 0x0, Write Data: c0
+# TEST 1.2: REGISTER OR FIELD ALIASING --> PASSED
+# TEST 1.2: REGISTER OR FIELD ALIASING --> PASSED
+# TEST 1.2: REGISTER OR FIELD ALIASING --> PASSED
+# NCSU_INFO:Time                18500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x0, Data: ff, Write Enable: 1
+# NCSU_INFO:Time                18500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 12 Address: 0x0, Write Data: ff
+# TEST 1.2: REGISTER OR FIELD ALIASING --> PASSED
+# TEST 1.2: REGISTER OR FIELD ALIASING --> PASSED
+# TEST 1.2: REGISTER OR FIELD ALIASING --> PASSED
+# NCSU_INFO:Time                22500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x1, Data: ff, Write Enable: 1
+# NCSU_INFO:Time                22500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 13 Address: 0x1, Write Data: ff
+# TEST 1.2: REGISTER OR FIELD ALIASING --> PASSED
+# TEST 1.2: REGISTER OR FIELD ALIASING --> PASSED
+# TEST 1.2: REGISTER OR FIELD ALIASING --> PASSED
+# NCSU_INFO:Time                26500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x2, Data: ff, Write Enable: 1
+# NCSU_INFO:Time                26500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 14 Address: 0x2, Write Data: ff
+# TEST 1.2: REGISTER OR FIELD ALIASING --> PASSED
+# TEST 1.2: REGISTER OR FIELD ALIASING --> PASSED
+# TEST 1.2: REGISTER OR FIELD ALIASING --> PASSED
+# ************TESTPLAN 1.2: Register or Field Aliasing Done *************
+# NCSU_INFO:Time                30500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x3, Data: ff, Write Enable: 1
+# NCSU_INFO:Time                30500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 15 Address: 0x3, Write Data: ff
+# ************TESTPLAN 1.3: Register and Field Default Values At Start *************
+# NCSU_INFO:Time                34500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x0, Data: 00, Write Enable: 1
+# NCSU_INFO:Time                34500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 16 Address: 0x0, Write Data: 00
+# TEST 1.3: REGISTER DEFAULT VALUES AFTER RESET --> PASSED
+# NCSU_INFO:Time                38500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x0, Data: 00, Write Enable: 0
+# NCSU_INFO:Time                38500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 17 Address: 0x0, Read Data: 00
+# TEST 1.3: REGISTER DEFAULT VALUES AFTER RESET --> PASSED
+# NCSU_INFO:Time                41500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x0, Data: 00, Write Enable: 0
+# NCSU_INFO:Time                41500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 18 Address: 0x0, Read Data: 00
+# TEST 1.3: REGISTER DEFAULT VALUES AFTER RESET --> PASSED
+# NCSU_INFO:Time                44500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x0, Data: 00, Write Enable: 0
+# NCSU_INFO:Time                44500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 19 Address: 0x0, Read Data: 00
+# TEST 1.3: REGISTER DEFAULT VALUES AFTER RESET --> PASSED
+# ************TESTPLAN 1.3: Register and Field Default Values Done *************
+# ************TESTPLAN 1.4: Check Access permission/Mode for register before and after core enable. *************
+# ************TESTPLAN 1.4: Check permission for register before enable. *************
+# NCSU_INFO:Time                47500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x0, Data: 00, Write Enable: 0
+# NCSU_INFO:Time                47500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 20 Address: 0x0, Read Data: 00
+# NCSU_INFO:Time                50500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x0, Data: ff, Write Enable: 1
+# NCSU_INFO:Time                50500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 21 Address: 0x0, Write Data: ff
+# TEST 1.4: REGISTER ACCESS PERMISSION ENFORCED --> PASSED
+# NCSU_INFO:Time                54500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x0, Data: c0, Write Enable: 0
+# NCSU_INFO:Time                54500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 22 Address: 0x0, Read Data: c0
+# NCSU_INFO:Time                57500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x1, Data: ff, Write Enable: 1
+# NCSU_INFO:Time                57500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 23 Address: 0x1, Write Data: ff
+# NCSU_INFO:Time                61500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x0, Data: c0, Write Enable: 0
+# NCSU_INFO:Time                61500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 24 Address: 0x0, Read Data: c0
+# NCSU_INFO:Time                64500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x2, Data: ff, Write Enable: 1
+# NCSU_INFO:Time                64500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 25 Address: 0x2, Write Data: ff
+# NCSU_INFO:Time                68500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x0, Data: c0, Write Enable: 0
+# NCSU_INFO:Time                68500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 26 Address: 0x0, Read Data: c0
+# NCSU_INFO:Time                71500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x3, Data: ff, Write Enable: 1
+# NCSU_INFO:Time                71500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 27 Address: 0x3, Write Data: ff
+# NCSU_INFO:Time                75500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x0, Data: c0, Write Enable: 0
+# NCSU_INFO:Time                75500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 28 Address: 0x0, Read Data: c0
+# NCSU_INFO:Time                78500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x0, Data: c0, Write Enable: 1
+# NCSU_INFO:Time                78500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 29 Address: 0x0, Write Data: c0
+# NCSU_INFO:Time                82500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x0, Data: ff, Write Enable: 1
+# NCSU_INFO:Time                82500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 30 Address: 0x0, Write Data: ff
+# TEST 1.4: REGISTER ACCESS PERMISSION ENFORCED --> PASSED
+# NCSU_INFO:Time                86500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x0, Data: c0, Write Enable: 0
+# NCSU_INFO:Time                86500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 31 Address: 0x0, Read Data: c0
+# NCSU_INFO:Time                89500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x1, Data: ff, Write Enable: 1
+# NCSU_INFO:Time                89500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 32 Address: 0x1, Write Data: ff
+# TEST 1.4: REGISTER ACCESS PERMISSION ENFORCED --> PASSED
+# NCSU_INFO:Time                93500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x0, Data: c0, Write Enable: 0
+# NCSU_INFO:Time                93500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 33 Address: 0x0, Read Data: c0
+# NCSU_INFO:Time                96500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x2, Data: ff, Write Enable: 1
+# NCSU_INFO:Time                96500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 34 Address: 0x2, Write Data: ff
+# TEST 1.4: REGISTER ACCESS PERMISSION ENFORCED --> PASSED
+# NCSU_INFO:Time               100500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x0, Data: c0, Write Enable: 0
+# NCSU_INFO:Time               100500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 35 Address: 0x0, Read Data: c0
+# NCSU_INFO:Time               103500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x3, Data: ff, Write Enable: 1
+# NCSU_INFO:Time               103500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 36 Address: 0x3, Write Data: ff
+# TEST 1.4: REGISTER ACCESS PERMISSION ENFORCED --> PASSED
+# ************TESTPLAN 1.4: Register and Field Default Values Done *************
+# ************TESTPLAN 1.5: Register Loopback Test Start *************
+# NCSU_INFO:Time               107500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x0, Data: c0, Write Enable: 0
+# NCSU_INFO:Time               107500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 37 Address: 0x0, Read Data: c0
+# NCSU_INFO:Time               110500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x0, Data: 56, Write Enable: 1
+# NCSU_INFO:Time               110500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 38 Address: 0x0, Write Data: 56
+# TEST 1.5: REGISTER LOOPBACK--> PASSED
+# NCSU_INFO:Time               114500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x0, Data: 40, Write Enable: 0
+# NCSU_INFO:Time               114500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 39 Address: 0x0, Read Data: 40
+# NCSU_INFO:Time               117500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x1, Data: 56, Write Enable: 1
+# NCSU_INFO:Time               117500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 40 Address: 0x1, Write Data: 56
+# TEST 1.5: REGISTER LOOPBACK--> PASSED
+# NCSU_INFO:Time               121500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x1, Data: 00, Write Enable: 0
+# NCSU_INFO:Time               121500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 41 Address: 0x1, Read Data: 00
+# NCSU_INFO:Time               124500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x2, Data: 56, Write Enable: 1
+# NCSU_INFO:Time               124500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 42 Address: 0x2, Write Data: 56
+# TEST 1.5: REGISTER LOOPBACK--> PASSED
+# NCSU_INFO:Time               128500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x2, Data: 80, Write Enable: 0
+# NCSU_INFO:Time               128500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 43 Address: 0x2, Read Data: 80
+# NCSU_INFO:Time               131500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x3, Data: 56, Write Enable: 1
+# NCSU_INFO:Time               131500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 44 Address: 0x3, Write Data: 56
+# TEST 1.5: REGISTER LOOPBACK--> PASSED
+# ************TESTPLAN 1.5: Register Loopback Test Done *************
+# ** Note: $finish    : /mnt/ncsudrive/m/mbuzruk/745/745_project/project_benches/proj4/sim/../../../verification_ip/environment_packages/i2cmb_env_pkg/src/i2cmb_register_test.svh(170)
+#    Time: 1345 ns  Iteration: 1  Instance: /top
+# 1
+# Break in Task i2cmb_env_pkg/i2cmb_register_test::run at /mnt/ncsudrive/m/mbuzruk/745/745_project/project_benches/proj4/sim/../../../verification_ip/environment_packages/i2cmb_env_pkg/src/i2cmb_register_test.svh line 170
+# Stopped at /mnt/ncsudrive/m/mbuzruk/745/745_project/project_benches/proj4/sim/../../../verification_ip/environment_packages/i2cmb_env_pkg/src/i2cmb_register_test.svh line 170
+#  coverage attribute -name TESTNAME -value i2cmb_register_test
+#  coverage save i2cmb_register_test.random.ucdb
+#  quit -f
+# End time: 17:19:59 on Apr 24,2025, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 1

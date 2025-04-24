@@ -1,0 +1,94 @@
+# vsim -c -coverage -sv_seed random -do "set NoQuitOnFinish 1; run -a; coverage attribute -name TESTNAME -value i2cmb_dut_functionality_test; coverage save i2cmb_dut_functionality_test.random.ucdb; quit -f" "+GEN_TRANS_TYPE=i2cmb_dut_functionality_test" optimized_debug_top_tb 
+# Start time: 17:20:02 on Apr 24,2025
+# //  Questa Sim-64
+# //  Version 2025.1_1 linux_x86_64 Feb 13 2025
+# //
+# // Unpublished work. Copyright 2025 Siemens
+# //
+# // This material contains trade secrets or otherwise confidential information
+# // owned by Siemens Industry Software Inc. or its affiliates (collectively,
+# // "SISW"), or its licensors. Access to and use of this information is strictly
+# // limited as set forth in the Customer's applicable agreements with SISW.
+# //
+# // This material may not be copied, distributed, or otherwise disclosed outside
+# // of the Customer's facilities without the express written permission of SISW,
+# // and may not be used in any way not expressly authorized by SISW.
+# //
+# Loading sv_std.std
+# Loading work.wb_if(fast)
+# Loading work.i2c_if(fast)
+# Loading work.ncsu_pkg(fast)
+# Loading work.wb_pkg(fast)
+# Loading work.i2c_pkg(fast)
+# Loading work.i2cmb_env_pkg(fast)
+# Loading work.top(fast)
+# Loading work.i2c_if(fast__2)
+# Loading work.wb_if(fast__2)
+# Loading work.i2cmb_assertions_sv_unit(fast)
+# Loading work.i2cmb_assertions(fast__1)
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading work.iicmb_m_wb(str)#1
+# Loading work.wishbone(rtl)#1
+# Loading ieee.numeric_std(body)
+# Loading work.iicmb_pkg(body)
+# Loading work.regblock(rtl)#1
+# Loading work.iicmb_int_pkg(body)
+# Loading work.iicmb_m(str)#1
+# Loading work.mbyte(rtl)#1
+# Loading work.mbit(rtl)#1
+# Loading work.conditioner_mux(str)#1
+# Loading work.conditioner(str)#1
+# Loading work.filter(rtl)#1
+# Loading work.bus_state(rtl)#1
+# ** Warning: (vsim-8386) Illegal assignment to type 'enum bit i2c_pkg::i2c_op_t' from type 'wire': An enum variable may only be assigned the same enum typed variable or one of its values.
+#    Time: 0 ps  Iteration: 0  Instance: /top/i2c_bus File: /mnt/ncsudrive/m/mbuzruk/745/745_project/project_benches/proj4/sim/../../../verification_ip/interface_packages/i2c_pkg/src/i2c_if.sv Line: 64
+# Sv_Seed = 2488637945
+# set NoQuitOnFinish 1
+# 1
+#  run -a
+# ----------------------------------------------------------------
+# //  NCSU Package 
+# //  Version 1.0a
+# ----------------------------------------------------------------
+# 
+# 
+# RUNNING TESTCASE: i2cmb_dut_functionality_test
+# NCSU_INFO:Time                    0:ncsu_component::build():  of tst.env.p0_agent.driver called
+# NCSU_INFO:Time                    0:ncsu_component::build():  of tst.env.p0_agent.monitor called
+# NCSU_INFO:Time                    0:ncsu_component::build():  of tst.env.p1_agent.driver called
+# NCSU_INFO:Time                    0:ncsu_component::build():  of tst.env.p1_agent.monitor called
+# NCSU_INFO:Time                    0:ncsu_component::build():  of tst.env.pred called
+# NCSU_INFO:Time                    0:ncsu_component::build():  of tst.env.scbd called
+# NCSU_INFO:Time                    0:ncsu_component::build():  of tst.env.coverage called
+# NCSU_INFO:Time                    0:ncsu_component::build():  of tst.env.wb_coverage called
+# NCSU_INFO:Time                    0:ncsu_component::build():  of tst.env.i2c_coverage called
+# ************TESTPLAN 2.5: CSR Bus ID Test Start *************
+# NCSU_INFO:Time                14500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x0, Data: c0, Write Enable: 1
+# NCSU_INFO:Time                14500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 4 Address: 0x0, Write Data: c0
+# NCSU_INFO:Time                18500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x1, Data: 00, Write Enable: 1
+# NCSU_INFO:Time                18500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 5 Address: 0x1, Write Data: 00
+# NCSU_INFO:Time                22500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x2, Data: 06, Write Enable: 1
+# NCSU_INFO:Time                22500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 6 Address: 0x2, Write Data: 06
+# TEST 2.5: CSR Bus ID TEST --> PASSED
+# ************TESTPLAN 2.5: CSR Bus ID Test Done *************
+# NCSU_INFO:Time                26500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x0, Data: c0, Write Enable: 0
+# NCSU_INFO:Time                26500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 7 Address: 0x0, Read Data: c0
+# ************TESTPLAN 2.8: Acknowledge Detection Start *************
+# NCSU_INFO:Time                29500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x0, Data: 00, Write Enable: 1
+# NCSU_INFO:Time                29500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 8 Address: 0x0, Write Data: 00
+# TEST 2.8: ACKNOWLEDGE DETECTION --> PASSED
+# ************TESTPLAN 2.8: Acknowledge Detection Done *************
+# NCSU_INFO:Time                33500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x0, Data: 00, Write Enable: 1
+# NCSU_INFO:Time                33500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 9 Address: 0x0, Write Data: 00
+# ** Note: $finish    : ../testbench/top.sv(150)
+#    Time: 435 ns  Iteration: 0  Instance: /top
+# 1
+# Break in NamedBeginStat test_flow at ../testbench/top.sv line 150
+# Stopped at ../testbench/top.sv line 150
+#  coverage attribute -name TESTNAME -value i2cmb_dut_functionality_test
+#  coverage save i2cmb_dut_functionality_test.random.ucdb
+#  quit -f
+# End time: 17:20:03 on Apr 24,2025, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 1

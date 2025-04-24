@@ -1,0 +1,8 @@
+BASE_TEST=i2cmb_register_test
+TEST_SEED=random
+
+BASE_TEST=i2cmb_dut_functionality_test
+TEST_SEED=random
+
+BASE_TEST=i2cmb_generator_compulsory_test
+TEST_SEED=random
