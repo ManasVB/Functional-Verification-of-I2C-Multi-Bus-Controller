@@ -1,5 +1,5 @@
 # vsim -c -coverage -sv_seed 12345 -do "set NoQuitOnFinish 1; run -a; coverage attribute -name TESTNAME -value i2cmb_dut_functionality_test; coverage save i2cmb_dut_functionality_test.12345.ucdb; quit -f" "+GEN_TRANS_TYPE=i2cmb_dut_functionality_test" optimized_debug_top_tb 
-# Start time: 16:16:37 on Apr 24,2025
+# Start time: 16:31:43 on Apr 24,2025
 # //  Questa Sim-64
 # //  Version 2025.1_1 linux_x86_64 Feb 13 2025
 # //
@@ -63,16 +63,31 @@
 # NCSU_INFO:Time                    0:ncsu_component::build():  of tst.env.coverage called
 # NCSU_INFO:Time                    0:ncsu_component::build():  of tst.env.wb_coverage called
 # NCSU_INFO:Time                    0:ncsu_component::build():  of tst.env.i2c_coverage called
+# ************TESTPLAN 2.5: CSR Bus ID Test Start *************
+# NCSU_INFO:Time                14500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x0, Data: c0, Write Enable: 1
+# NCSU_INFO:Time                14500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 4 Address: 0x0, Write Data: c0
+# NCSU_INFO:Time                18500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x1, Data: 00, Write Enable: 1
+# NCSU_INFO:Time                18500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 5 Address: 0x1, Write Data: 00
+# NCSU_INFO:Time                22500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x2, Data: 06, Write Enable: 1
+# NCSU_INFO:Time                22500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 6 Address: 0x2, Write Data: 06
+# TEST 2.5: CSR Bus ID TEST --> PASSED
 # ************TESTPLAN 2.5: CSR Bus ID Test Done *************
+# NCSU_INFO:Time                26500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x0, Data: c0, Write Enable: 0
+# NCSU_INFO:Time                26500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 7 Address: 0x0, Read Data: c0
 # ************TESTPLAN 2.8: Acknowledge Detection Start *************
+# NCSU_INFO:Time                29500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x0, Data: 00, Write Enable: 1
+# NCSU_INFO:Time                29500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 8 Address: 0x0, Write Data: 00
+# TEST 2.8: ACKNOWLEDGE DETECTION --> PASSED
 # ************TESTPLAN 2.8: Acknowledge Detection Done *************
+# NCSU_INFO:Time                33500:wb_monitor::run(): tst.env.p0_agent.monitor: Address: 0x0, Data: 00, Write Enable: 1
+# NCSU_INFO:Time                33500:coverage::nb_put(): tst.env.coverage name: monitored trans transaction_count: 9 Address: 0x0, Write Data: 00
 # ** Note: $finish    : ../testbench/top.sv(150)
-#    Time: 213 ns  Iteration: 0  Instance: /top
+#    Time: 435 ns  Iteration: 0  Instance: /top
 # 1
 # Break in NamedBeginStat test_flow at ../testbench/top.sv line 150
 # Stopped at ../testbench/top.sv line 150
 #  coverage attribute -name TESTNAME -value i2cmb_dut_functionality_test
 #  coverage save i2cmb_dut_functionality_test.12345.ucdb
 #  quit -f
-# End time: 16:16:38 on Apr 24,2025, Elapsed time: 0:00:01
+# End time: 16:31:44 on Apr 24,2025, Elapsed time: 0:00:01
 # Errors: 0, Warnings: 1
