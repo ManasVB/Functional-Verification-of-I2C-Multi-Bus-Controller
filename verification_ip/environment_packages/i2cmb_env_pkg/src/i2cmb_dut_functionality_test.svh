@@ -1,5 +1,9 @@
 class i2cmb_dut_functionality_test extends generator;
 
+  function new (string name = "", ncsu_component_base parent = null);
+      super.new (name, parent);
+  endfunction
+
   local wb_agent agent_wb;
 
   protected task generate_wb_transaction_write (bit [1:0] wb_addr, bit [7:0] wb_data); 
