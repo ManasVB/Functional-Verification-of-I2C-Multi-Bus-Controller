@@ -16,4 +16,4 @@ mv transcript transcript_generator_compulosry_test
 
 make merge_coverage
 
-make report_coverage
+# make report_coverage

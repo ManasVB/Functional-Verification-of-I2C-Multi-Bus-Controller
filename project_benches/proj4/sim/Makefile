@@ -57,7 +57,8 @@ convert_testplan:
 
 merge_coverage:
 	xml2ucdb -format Excel ./i2cmb_test_plan.xml ./i2cmb_test_plan.ucdb
-	vcover merge -stats=none -strip 0 -totals sim_and_testplan_merged.ucdb ./*.ucdb 
+	vcover merge -stats=none -strip 0 -totals regression.ucdb ./*.ucdb
+	vsim -viewcov =regression.ucdb
 
 report_coverage:
 	vcover report -details -html -htmldir covhtmlreport -assert -directive -cvg -code bcefst -threshL 50 -threshH 90 ./sim_and_testplan_merged.ucdb
