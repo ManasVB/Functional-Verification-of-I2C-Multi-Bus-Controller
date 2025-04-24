@@ -44,7 +44,17 @@ interface i2cmb_assertions #(
     @(posedge clk_i) cmdr_read |-> !cmdr.fields.r;
   endproperty
 
+  /** Testplan 2.7 Valid Register Address
+  Assertion: Ensure code address's valid registers only
+  */  
+  property addr_valid;
+    disable iff (rst_i)
+    @(posedge clk_i) stb_o |-> (adr_o == 2'h0 || adr_o == 2'h1 || adr_o == 2'h2 || adr_o == 2'h3);
+  endproperty
+
+
   assert property(cmdr_irq_clear) else $error("Invalid cmdr_irq_clear operation for wb Protocol");
   assert property(cmdr_res_bit) else $error("Invalid cmdr_res_bit operation for wb Protocol");
+  assert property(addr_valid) else $error("Invalid addr_valid operation for wb Protocol");
 
 endinterface

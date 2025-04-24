@@ -1,5 +1,5 @@
 # vsim -c -coverage -sv_seed 12345 -do "set NoQuitOnFinish 1; run -a; coverage attribute -name TESTNAME -value i2cmb_generator_compulsory_test; coverage save i2cmb_generator_compulsory_test.12345.ucdb; quit -f" "+GEN_TRANS_TYPE=i2cmb_generator_compulsory_test" optimized_debug_top_tb 
-# Start time: 16:31:47 on Apr 24,2025
+# Start time: 17:09:10 on Apr 24,2025
 # //  Questa Sim-64
 # //  Version 2025.1_1 linux_x86_64 Feb 13 2025
 # //
@@ -3581,5 +3581,5 @@
 #  coverage attribute -name TESTNAME -value i2cmb_generator_compulsory_test
 #  coverage save i2cmb_generator_compulsory_test.12345.ucdb
 #  quit -f
-# End time: 16:31:50 on Apr 24,2025, Elapsed time: 0:00:03
+# End time: 17:09:13 on Apr 24,2025, Elapsed time: 0:00:03
 # Errors: 0, Warnings: 1

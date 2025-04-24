@@ -37,20 +37,11 @@ class i2cmb_wb_coverage extends ncsu_component #(.T(wb_transaction_base));
     DPR_Data_Value: coverpoint wb_data { option.auto_bin_max = 1; }
   endgroup
 
-  covergroup CSR_coverage @(sample_CSR);
-    CSR_Enable_bit: coverpoint csr_reg.e;
-    CSR_Interrupt_Enable_bit: coverpoint csr_reg.ie;
-    CSR_Bus_Busy_bit: coverpoint csr_reg.bb;
-    CSR_Bus_Captured_bit: coverpoint csr_reg.bc;
-    CSR_Bus_ID_bits: coverpoint csr_reg.bus_id { option.auto_bin_max = 4; }
-  endgroup
-
   function new(string name= "", ncsu_component_base parent = null);
     super.new(name, parent);
     env_coverage = new;
     wb_transaction_base_cg = new;
     DPR_coverage = new;
-    CSR_coverage = new;
   endfunction
 
   virtual function void nb_put(T trans);
@@ -66,7 +57,6 @@ class i2cmb_wb_coverage extends ncsu_component #(.T(wb_transaction_base));
     op = wb_op_t'(trans.wb_we);
     wb_transaction_base_cg.sample(op, cmd, rsp);
     if(wb_addr==DPR_ADDR) ->>sample_DPR;
-    if(wb_addr==CSR_ADDR)	->>sample_CSR;
 
     ->>wb_covr;
   endfunction

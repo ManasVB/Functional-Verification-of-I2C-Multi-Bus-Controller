@@ -8,22 +8,12 @@ class coverage_class extends ncsu_component#(.T(wb_transaction_base));
   bit i2c_addr, i2c_op;
   bit command, response;
 
-  // covergroup DPR_Coverage;
-  // 	option.per_instance = 1;
-  //   option.name = get_full_name();
-  // endgroup
 
   covergroup CSR_Coverage;
   	option.per_instance = 1;
     option.name = get_full_name();
   endgroup
 
-  // covergroup  wb_transaction_base_cg;
-  // 	option.per_instance = 1;
-  //   option.name = get_full_name();
-  //   command: coverpoint command;
-  //   response: coverpoint response;
-  // endgroup
 
   function new(string name = "", ncsu_component_base parent = null);
     super.new(name, parent);
