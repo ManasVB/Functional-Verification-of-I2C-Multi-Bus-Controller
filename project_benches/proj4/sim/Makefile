@@ -1,4 +1,4 @@
-GEN_TRANS_TYPE ?= wb_transaction_base
+GEN_TRANS_TYPE ?= i2cmb_transaction
 TEST_SEED ?= 12345
 
 export ECE745_PROJECT_HOME ?= $(PWD)/../../..
@@ -12,18 +12,18 @@ clean:
 	rm -rf work *.wlf transcript qrun.out covhtmlreport *.ucdb
 
 comp_I2C_MB:
-	vcom ../rtl/iicmb_int_pkg.vhd
-	vcom ../rtl/iicmb_pkg.vhd
-	vcom ../rtl/mbyte.vhd
-	vcom ../rtl/mbit.vhd
-	vcom ../rtl/bus_state.vhd
-	vcom ../rtl/filter.vhd
-	vcom ../rtl/conditioner.vhd
-	vcom ../rtl/conditioner_mux.vhd
-	vcom ../rtl/iicmb_m.vhd
-	vcom ../rtl/regblock.vhd
-	vcom ../rtl/wishbone.vhd
-	vcom ../rtl/iicmb_m_wb.vhd
+	vcom +cover=bcefsx ../rtl/iicmb_int_pkg.vhd
+	vcom +cover=bcefsx ../rtl/iicmb_pkg.vhd
+	vcom +cover=bcefsx ../rtl/mbyte.vhd
+	vcom +cover=bcefsx ../rtl/mbit.vhd
+	vcom +cover=bcefsx ../rtl/bus_state.vhd
+	vcom +cover=bcefsx ../rtl/filter.vhd
+	vcom +cover=bcefsx ../rtl/conditioner.vhd
+	vcom +cover=bcefsx ../rtl/conditioner_mux.vhd
+	vcom +cover=bcefsx ../rtl/iicmb_m.vhd
+	vcom +cover=bcefsx ../rtl/regblock.vhd
+	vcom +cover=bcefsx ../rtl/wishbone.vhd
+	vcom +cover=bcefsx ../rtl/iicmb_m_wb.vhd
 
 inc_test:	# This command creates .ucdb files for the 'tests' needed to link in the testplan
 	$(MAKE) run_cli GEN_TRANS_TYPE=i2cmb_register_test
@@ -34,7 +34,7 @@ comp_bench: comp_ncsu_pkg comp_wb_pkg comp_i2c_pkg comp_i2cmb_env_pkg
 	vlog ../testbench/top.sv
 
 optimize:
-	vopt +acc top -o optimized_debug_top_tb
+	vopt +cover=bcefsx +acc top -o optimized_debug_top_tb
 
 compile: comp_I2C_MB comp_bench optimize
 
@@ -42,10 +42,10 @@ simulate:
 	vsim  -i -classdebug -msgmode both -do "set NoQuitOnFinish 1; do wave.do" optimized_debug_top_tb
 
 run_cli:
-	vsim  -c -sv_seed $(TEST_SEED) -do "set NoQuitOnFinish 1; run -a; coverage attribute -name TESTNAME -value $(GEN_TRANS_TYPE); coverage save $(GEN_TRANS_TYPE).$(TEST_SEED).ucdb; quit -f" +GEN_TRANS_TYPE=$(GEN_TRANS_TYPE) optimized_debug_top_tb
+	vsim  -c -coverage -sv_seed $(TEST_SEED) -do "set NoQuitOnFinish 1; run -a; coverage attribute -name TESTNAME -value $(GEN_TRANS_TYPE); coverage save $(GEN_TRANS_TYPE).$(TEST_SEED).ucdb; quit -f" +GEN_TRANS_TYPE=$(GEN_TRANS_TYPE) optimized_debug_top_tb
 
 run_gui:
-	vsim  -sv_seed $(TEST_SEED) -do " set NoQuitOnFinish 1; do wave.do;run -a; coverage attribute -name TESTNAME -value $(GEN_TRANS_TYPE); coverage save $(GEN_TRANS_TYPE).$(TEST_SEED).ucdb" +GEN_TRANS_TYPE=$(GEN_TRANS_TYPE) optimized_debug_top_tb
+	vsim -coverage -sv_seed $(TEST_SEED) -do " set NoQuitOnFinish 1; do wave.do;run -a; coverage attribute -name TESTNAME -value $(GEN_TRANS_TYPE); coverage save $(GEN_TRANS_TYPE).$(TEST_SEED).ucdb" +GEN_TRANS_TYPE=$(GEN_TRANS_TYPE) optimized_debug_top_tb
 
 cli: clean compile optimize run_cli
 

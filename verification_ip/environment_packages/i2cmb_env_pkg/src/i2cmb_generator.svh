@@ -1,5 +1,6 @@
 class generator extends ncsu_component;
-
+  `ncsu_register_object(generator)
+  
   wb_transaction_base wb_trans;
   i2c_transaction_base i2c_trans;
 

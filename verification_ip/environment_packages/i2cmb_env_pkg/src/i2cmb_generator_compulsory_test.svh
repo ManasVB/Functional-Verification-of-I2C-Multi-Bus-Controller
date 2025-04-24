@@ -47,6 +47,8 @@ class i2cmb_generator_compulsory_test extends generator;
     this.wb_init();
 
     // Write 32 incrementing values, from 0 to 31, to the i2c_bus
+
+    $display("************TESTPLAN 4.1 : Consecutive Writes Start *************");
     this.wb_start();
     this.wb_set_slave_params(8'h22, WB_WRITE);
     for(int i = 0;i <= 31; ++i) begin
@@ -54,7 +56,10 @@ class i2cmb_generator_compulsory_test extends generator;
     end
     this.wb_stop();
 
+    $display("************TESTPLAN 4.1 : Consecutive Writes Done **************");
+
     // Read 32 values from the i2c_bus -> Return incrementing data from 100 to 131
+    $display("************TESTPLAN 4.2 : Consecutive Reads Start *************");
     todo_type = 0;
     this.wb_start();
     this.wb_set_slave_params(8'h22, WB_READ);
@@ -64,7 +69,10 @@ class i2cmb_generator_compulsory_test extends generator;
     this.perform_read_nack();
     this.wb_stop();
 
+    $display("************TESTPLAN 4.2 : Consecutive Reads Done **************");
+
     // Alternate writes and reads for 64 transfers
+    $display("************TESTPLAN 4.3 : Alternating Read Write Start *************");
     todo_type = 1;
     inc_data = rwdata;
     dec_data = rwdata-1;
@@ -79,6 +87,8 @@ class i2cmb_generator_compulsory_test extends generator;
       this.perform_read_nack();
       this.wb_stop();
     end
+
+    $display("************TESTPLAN 4.3 : Alternating Read Write Done *************");
     
     endtask
   
