@@ -4,7 +4,7 @@ class i2cmb_wb_coverage extends ncsu_component #(.T(wb_transaction_base));
   cmd_t iicmb_cmd;
   wb_op_t wb_op;
   bit [WB_DATA_WIDTH-1:0] wb_data;
-  event sample_wb;
+  event wb_covr, sample_DPR;
 
   env_configuration configuration;
 
@@ -12,9 +12,9 @@ class i2cmb_wb_coverage extends ncsu_component #(.T(wb_transaction_base));
     configuration = cfg;
   endfunction
 
-  covergroup env_coverage @(sample_wb);
-    wb_addr_offset: coverpoint wb_addr { option.auto_bin_max = 1; } 	// c1.auto[CSR],c1.auto[DPR],c1.auto[CMDR],c1.auto[FSMR]
-    wb_operation: coverpoint wb_op { option.auto_bin_max = 1; } 		// c2.auto[WB_READ],c2.auto[WB_WRITE]
+  covergroup env_coverage @(wb_covr);
+    wb_addr_offset: coverpoint 1'b0 { option.auto_bin_max = 1; } 	// c1.auto[CSR],c1.auto[DPR],c1.auto[CMDR],c1.auto[FSMR]
+    wb_operation: coverpoint 1'b0 { option.auto_bin_max = 1; } 		// c2.auto[WB_READ],c2.auto[WB_WRITE]
   endgroup  
 
   covergroup wb_transaction_base_cg with function sample (wb_op_t op, cmd_t cmd, rsp_t rsp);
@@ -31,10 +31,16 @@ class i2cmb_wb_coverage extends ncsu_component #(.T(wb_transaction_base));
 
   endgroup
 
+  covergroup DPR_coverage @(sample_DPR);
+    // Create 4 automatic bins, each bins cover 256/4= 64 values
+    DPR_Data_Value: coverpoint wb_data { option.auto_bin_max = 1; }
+  endgroup
+
   function new(string name= "", ncsu_component_base parent = null);
     super.new(name, parent);
     env_coverage = new;
     wb_transaction_base_cg = new;
+    DPR_coverage = new;
   endfunction
 
   virtual function void nb_put(T trans);
@@ -47,8 +53,9 @@ class i2cmb_wb_coverage extends ncsu_component #(.T(wb_transaction_base));
     rsp = rsp_t'({cmdr.fields.don, cmdr.fields.nak, cmdr.fields.al, cmdr.fields.err});
     op = wb_op_t'(trans.wb_we);
     wb_transaction_base_cg.sample(op, cmd, rsp);
+    if(trans.wb_addr==DPR_ADDR) ->>sample_DPR;
 
-    ->>sample_wb;
+    ->>wb_covr;
   endfunction
 
 endclass

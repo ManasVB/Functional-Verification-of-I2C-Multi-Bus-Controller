@@ -11,8 +11,6 @@ class i2cmb_register_test extends ncsu_component;
 
   virtual task run();
 
-    // Test Plan - 1.1: Register Address Valid
-
     // Test Plan - 1.2: Register or Field Aliasing
     for(int i=0; i<4 ;i++) begin
         automatic addr_t addr_ofst_1 = addr_t'(i);
@@ -58,8 +56,6 @@ class i2cmb_register_test extends ncsu_component;
             else $error("TEST 1.4: REGISTER ACCESS PERMISSION ENFORCED --> FAILED");
         end
     end
-    
-    // Test Plan - 1.5: Register Loopback
 
 
   endtask
